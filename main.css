@@ -15,7 +15,7 @@ body {
 
 ul {
 	list-style-type: none;
-	margin: 0;
+	margin: 0 ;
 	padding: 0;
 	overflow: hidden;
 	background-color: #000;
@@ -35,6 +35,23 @@ h1 {
 	letter-spacing: 3px;
 }
 
+h2 {
+	font-family: 'Time News Roman', serif;
+	text-align:center;
+	font-size: 50px;
+	color: #fff;
+	letter-spacing: 3px;
+}
+
+.proj-content {
+	font-family: 'Roboto', sans-serif;
+	text-align:center;
+	font-size: 18px;
+	color: #fff;
+	width: 60%;
+	margin: 0px auto 100px;
+	
+}
 li a {
 	color: #bcbcbc;
 	padding: 30px 30px;
@@ -99,4 +116,34 @@ li a:hover {
   -ms-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
   text-align: center;
+}
+
+.main-content{
+	color: #bcbcbc;
+	margin: 100px;
+}
+
+.main-content img { 
+	float: left;
+	width: 40%;
+	height: auto;
+	padding:0 50px 50px 0;
+}
+
+.proj-image {
+	margin: 0 100px 100px;
+}
+
+.proj-list {
+	display: flex;
+	justify-content: center;
+}
+
+.responsive {
+  width: 100%;
+  height: auto;
+}
+
+footer{
+	margin-bottom: 50px;
 }
