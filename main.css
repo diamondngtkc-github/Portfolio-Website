@@ -101,13 +101,13 @@ li a:hover {
 }
 
 .column:hover .overlay {
-  opacity: 0.5;
+	opacity: 0.5;
 }
 
 .text {
   color: white;
-  font-size: 40px;
-  font-family: 'Helvetica', sans-serif;
+  font-size: 35px;
+  font-family: 'Century Gothic', sans-serif;
   font-weight: bold;
   position: absolute;
   top: 50%;
