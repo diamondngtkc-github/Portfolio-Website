@@ -36,9 +36,9 @@ h1 {
 }
 
 h2 {
-	font-family: 'Time News Roman', serif;
+	font-family: 'Century gothic', serif;
 	text-align:center;
-	font-size: 50px;
+	font-size: 30px;
 	color: #fff;
 	letter-spacing: 3px;
 }
@@ -49,7 +49,7 @@ h2 {
 	font-size: 18px;
 	color: #fff;
 	width: 60%;
-	margin: 0px auto 100px;
+	margin: 0px auto 50px;
 	
 }
 li a {
@@ -101,7 +101,7 @@ li a:hover {
 }
 
 .column:hover .overlay {
-	opacity: 0.5;
+	opacity: 0.6;
 }
 
 .text {
@@ -131,14 +131,17 @@ li a:hover {
 }
 
 .proj-image {
-	margin: 0 100px 100px;
+	margin: 0 200px 0px;
 }
 
 .proj-list {
 	display: flex;
 	justify-content: center;
 }
-
+.proj-video{
+	display: flex;
+	justify-content: center;
+}
 .responsive {
   width: 100%;
   height: auto;
