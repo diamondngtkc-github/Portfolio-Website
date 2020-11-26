@@ -2,12 +2,11 @@ html, body {
   min-height: 100%;
   display: flex;
   flex-direction: column;
-  font-weight: 300;
   line-height: 1.5;
 }
 
 body {
-  font-family: 'Roboto light', sans-serif;
+  font-family: 'Arial',Helvetica, sans-serif;
   background-color:#F7F2F0;
   margin: 0px 50px;
 }
@@ -49,16 +48,25 @@ h2 {
 
 p {
 	color: #000;
+
 }
-.proj-content {
-	font-family: 'Helvetica Neue', Arial, sans-serif;
+.proj-brief {
 	text-align:center;
 	font-size: 18px;
 	color: #000;
 	width: 60%;
-	margin: 50px auto 0px;
+	margin: 50px auto 50px;
 	
 }
+.proj-content {
+  text-align:center;
+  font-size: 18px;
+  color: #000;
+  width: 60%;
+  margin: 0px auto 50px;
+  
+}
+
 li a {
 	color: #6c6c6c;
 	padding: 5px 5px;
@@ -72,7 +80,7 @@ li a:hover {
 
 .proj-list {
 	padding-bottom: 100px;
-	letter-spacing: -0.5px;
+	letter-spacing: -0.2px;
 }
 
 
@@ -137,14 +145,17 @@ li a:hover {
 
 .main-content{
 	color: #bcbcbc;
-	margin: 100px;
+	margin: 50px 0px;
+}
+.main-content p{
+  text-align: justify;
 }
 
 .main-content img { 
 	float: left;
-	width: 40%;
+	width: 30%;
 	height: auto;
-	padding:0 50px 50px 0;
+	padding: 0px 30px 20px 0;
 }
 
 .proj-image {
