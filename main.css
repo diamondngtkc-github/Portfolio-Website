@@ -43,7 +43,6 @@ h2 {
 	font-size: 20px;
 	color: #000;
 	letter-spacing: 3px;
-
 }
 
 p {
@@ -223,7 +222,7 @@ li a:hover {
   float: left;
   font-size: 16px;
   color: #000;
-  padding: 2px 0px 0px 15px;
+  padding: 3px 0px 0px 15px;
   text-decoration: none;
 }
 
@@ -272,10 +271,11 @@ li a:hover {
 
 /* index page styling */
 .grid-container {
-  columns: 2 200px;
-  column-gap: 5rem;
-  width: 90%;
-  margin: 0 auto;
+  columns: 3 200px;
+  column-gap: 4rem;
+  column-fill: balance;
+  width: 100%;
+  margin: 0 auto 10px;
 }
 
 .grid-container div {
@@ -298,3 +298,36 @@ li a:hover {
       text-align: center;
       font-style: italic;
 }
+
+
+/* index page styling */
+.grid-container2 {
+  columns: 2 200px;
+  column-gap: 4rem;
+  column-fill: balance;
+  width: 65%;
+  margin: 0 auto 10px;
+}
+
+.grid-container2 div {
+    width: 150px;
+    margin: 0 1.5rem 1.5rem 0;
+    display: inline-block;
+    width: 100%;
+    padding: 5px;
+    border-radius: 5px;
+    transition: all .25s ease-in-out;
+  }
+
+.grid-container2 img {
+      width: 100%;
+      transition: all .25s ease-in-out;
+}
+.grid-container2 p {
+      margin: 5px 0;
+      padding: 0;
+      text-align: center;
+      font-style: italic;
+}
+
+
