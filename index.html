@@ -1,179 +1,192 @@
 <!DOCTYPE html>
 <html>
 <head>
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-176863698-1"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'UA-176863698-1');
-</script>
-
-	<title>Diamond Nguyen Portfolio</title>
-	<link rel="shortcut icon" href="img/icon.png" type="image/x-icon">
-	<meta charset="utf-8"/>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0"> 
-	<link href='https://fonts.googleapis.com/css?family=Lato:400,300,100,700,900' rel='stylesheet' type='text/css'>
-	<link rel="stylesheet" type="text/css" href="main.css">
+    <meta charset="UTF-8">
+    <meta name="description" content="Diamond Nguyen, a Multimedia Artist and Educator.">
+    <link rel="icon" href="img/icon.png" type="image/x-icon">
+    <title>Diamond Nguyen - Multimedia Artist and Educator</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="main.css">
 </head>
-
 <body>
-  <header>
-	<h1><a href="index.html" style="color: #000;text-decoration: none">DIAMOND NGUYEN</h1>
-<div class="navbar">
-  <a href="about.html">about me</a>
-
-
-  <div class="dropdown">
-    <button class="dropbtn" >others
-      <i class="fa fa-caret-down"></i>
-    </button>
-    <div class="dropdown-content">
-    	<a href="webdesign.html">cycloid</a>
-    	<a href="sketches.html">sketches</a>
+    <button id="back-to-top-button" style="display: none;">↑</button>
+    <header>
+        <nav>
+            <div class="left-nav">
+                <ul>
+                    <li class="about-link"><a href="about.html">About</a></li>
+                </ul>
+            </div>
+            <div class="center-nav">
+                <a href="index2.html" class="nav-brand">DIAMOND NGUYEN</a>
+            </div>
+            <div class="right-nav">
+                <ul>
+                    <li class="dropdown">
+                        <a href="#teach">teach</a>
+                        <div class="dropdown-content">
+                            <a href="DigitalNarrative.html">Digital Narrative</a>
+                            <a href="2dAnimation.html">2D Animation</a>
+                            <a href="3dAnimation.html">3D Animation</a>
+                            <a href="VJEvents.html">VJ Events</a>
+                        </div>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#design">design</a>
+                        <div class="dropdown-content">
+                            <a href="VideoTemplates.html">Video Templates</a>
+                            <a href="AIActors.html">AI Actors</a>
+                        </div>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#animate">animate</a>
+                        <div class="dropdown-content">
+                            <a href="FantasticFables.html">Fantastic Fables</a>
+                            <a href="BNDC.html">BNDC</a>
+                            <a href="Mindblown.html">Mindblown</a>
+                            <a href="ManMade.html">ManMade</a>
+                        </div>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#interact">interact</a>
+                        <div class="dropdown-content">
+                            <a href="Skyportal.html">Skyportal</a>
+                            <a href="OUE.html">OUE</a>
+                            <a href="LivingSpace.html">LivingSpace</a>
+                            <a href="Astar.html">A*star</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <div class="header-content">
+            <h2>Multimedia Artist and Educator</h2>
+        </div>
+    </header>
+  
+  <main>
+    <div class="gallery-container">
+      <div class="gallery-grid">
+        <div class="gallery-item square">
+          <a href="DigitalNarrative.html"> 
+            <img src="gif/narrative.gif" alt="Digital Narrative">
+            <div class="item-overlay">
+              <div class="item-text">Teach Digital Narrative</div>
+            </div>
+            </a>
+        </div>
+        <div class="gallery-item square">
+          <a href="2dAnimation.html">
+            <img src="gif/2D.gif" alt="2D Animation">
+            <div class="item-overlay">
+              <div class="item-text">Teach 2D Animation</div>
+            </div>
+          </a>
+        </div>
+        <div class="gallery-item portrait-rectangle">
+          <a href="VideoTemplates.html">
+            <img src="gif/Templates.gif" alt="Video Templates">
+            <div class="item-overlay">
+              <div class="item-text">Design Video Templates</div>
+            </div>
+            </a>
+        </div>
+        <div class="gallery-item portrait-rectangle">
+          <a href="AIActors.html">
+            <img src="gif/AI-actors.gif" alt="AI Actor">
+            <div class="item-overlay">
+              <div class="item-text">Enhance AI Actors</div>
+            </div>
+            </a>
+        </div>
+        <div class="gallery-item square">
+          <a href="VJEvents.html"">
+            <img src="gif/VJ.gif" alt="VJ Live Performance">
+            <div class="item-overlay">
+              <div class="item-text">Teach VJ Events</div>
+            </div>
+            </a>
+        </div>
+        <div class="gallery-item square">
+          <a href="3dAnimation.html">
+            <img src="gif/3d.gif" alt="3D Animation">
+            <div class="item-overlay">
+              <div class="item-text">Teach 3D Animation</div>
+            </div>
+            </a>
+        </div>
+        <div class="gallery-item square">
+          <a href="FantasticFables.html">
+            <img src="gif/redhill.gif" alt="Fantastic Fable">
+            <div class="item-overlay">
+              <div class="item-text">Animate Fantastic Fables</div>
+            </div>
+            </a>
+        </div>
+        <div class="gallery-item square">
+          <a href="BNDC.html">
+            <img src="gif/vskh.gif" alt="Binh Ngo Dai Chien">
+            <div class="item-overlay">
+              <div class="item-text">Animate Binh Ngo Dai Chien</div>
+            </div>
+            </a>
+        </div>
+        <div class="gallery-item square">
+          <a href="Skyportal.html">
+            <img src="gif/skyportal.gif" alt="Sky Portal">
+            <div class="item-overlay">
+              <div class="item-text">Interact with Sky Portal</div>
+            </div>
+            </a>
+        </div>
+        <div class="gallery-item square">
+          <a href="OUE.html">
+            <img src="gif/oue.gif" alt="OUE">
+            <div class="item-overlay">
+              <div class="item-text">Interact with OUE</div>
+            </div>
+            </a>
+        </div>
+        <div class="gallery-item square">
+          <a href="Mindblown.html">
+            <img src="gif/mindblown.gif" alt="Mindblown">
+            <div class="item-overlay">
+              <div class="item-text">Animate Mindblown</div>
+            </div>
+            </a>
+        </div>
+        <div class="gallery-item square">
+          <a href="ManMade.html">
+            <img src="gif/manmade.gif" alt="Manmade">
+            <div class="item-overlay">
+              <div class="item-text">Animate ManMade</div>
+            </div>  
+            </a>
+        </div>
+        <div class="gallery-item square">
+          <a href="LivingSpace.html">
+            <img src="gif/livingspace.gif" alt="Living Space">
+            <div class="item-overlay">
+              <div class="item-text">Interact with Living Space</div>
+            </div>
+            </a>
+        </div>
+        <div class="gallery-item square">
+          <a href="Astar.html">
+            <img src="gif/astar.gif" alt="A*star">
+            <div class="item-overlay">
+              <div class="item-text">Interact with A*star</div>
+            </div>
+            </a>
+        </div>
+      </div>
     </div>
-  </div> 
-  <div class="dropdown">
-    <button class="dropbtn" >animation 
-      <i class="fa fa-caret-down"></i>
-    </button>
-    <div class="dropdown-content">
-      <a href="redhill.html">redhill</a>
-      <a href="project3.html">vskh</a>
-      <a href="project8.html">chope</a>
-      <a href="project7.html">sccc</a>
-      <a href="project5.html">temasek</a>
-      <a href="project4.html">manmade</a>
-      <a href="space.html">space</a>
-      <a href="project6.html">mindblown</a>
-    </div>
-  </div> 
+  </main>
 
-  <div class="dropdown">
-    <button class="dropbtn">interactive
-      <i class="fa fa-caret-down"></i>
-    </button>
-    <div class="dropdown-content">
-      <a href="project1.html">sky portal</a>
-      <a href="project2.html">livingspace</a>
-      <a href="OUE.html">oue</a>
-      <a href="zenpond.html">zen pond</a>
-      <a href="vangogh.html">van gogh</a>
-      <a href="astar.html">astar</a>
-    </div>
-  </div> 
-    <div class="dropdown">
-    <button class="dropbtn" >demo reel
-      <i class="fa fa-caret-down"></i>
-    </button>
-    <div class="dropdown-content">
-      <a href="InteractiveDemo.html">interactive</a>
-      <a href="AnimationDemo.html">animation</a>
-  </div>
-</div>
-</div>
-  </header>
+<footer>
+    &copy; 2023 Diamond Nguyen
+</footer>
 
-	<div class="row">
-		<div class="column">
-			<img src="img/slogan.jpg" alt="image8" class="image">
-		</div>
-	</div>
-	
-<h2>.interactive</h1>
-<div class="grid-container">
-  <div>
-    <a href="project1.html" style="text-decoration: none;"><img class='grid-item grid-item-1' src='gif/skyportal.gif'  alt=''>
-    <p><b>sky portal (2019) </b> – an augmented reality supernatural-themed experience at Gardens by the Bay, Singapore</p></a>
-  </div>
-  <div>
-    <a href="project2.html" style="text-decoration: none;"><img class='grid-item grid-item-2' src='gif/livingspace.gif' alt=''>
-    <p><b>livingspace (2018) </b> – an interactive and immersive gallery to reveal the complex planning process of Housing Development Board (HDB), Singapore</p></a>
-  </div>
-  <div>
-    <a href="OUE.html" style="text-decoration: none;"><img class='grid-item grid-item-3' src='gif/oue.gif' alt=''>
-    <p><b>oue (2017) </b> – an interactive circus-themed spectacle projected on glass at OUE Downtown Gallery, Singapore</p></a>
-  </div>
-  <div>
-    <a href="zenpond.html" style="text-decoration: none;"><img class='grid-item grid-item-4' src='gif/zenpond.gif' alt=''>
-    <p><b>zen pond (2020) </b> – a personal interactive KOI-fish-pond-themed project controlled by TouchOSC on the phone</p></a>
-  </div>
-  <div>
-    <a href="vangogh.html" style="text-decoration: none;"><img class='grid-item grid-item-5' src='gif/vangogh.gif' alt=''>
-    <p><b>van gogh (2020) </b> – a personal speech recognition virtual assistant specialized in Van Gogh related topics</p></a>
-  </div>
-   <div>
-    <a href="astar.html" style="text-decoration: none;"><img class='grid-item grid-item-6' src='gif/astar.gif' alt=''>
-    <p><b>astar (2016) </b> – a personal interactive demo about an innovative agency A*STAR, Singapore</p></a>
-  </div>
-</div>
-
-<h2>.animation</h1>
-<div class="grid-container">
-   <div>
-    <a href="redhill.html" style="text-decoration: none;"><img class='grid-item grid-item-1' src='gif/redhill.gif'  alt=''>
-    <p><b>redhill (2020) </b> – an episode in the Fantastic Fables series named Redhill, a short fictional animation about the fight against a malicious virus of a future civilization</p></a>
-  </div>
-  <div>
-    <a href="project3.html" style="text-decoration: none;"><img class='grid-item grid-item-1' src='gif/vskh.gif'  alt=''>
-    <p><b>vskh (2020) </b> – a full-length 60-minute crowdfunding Vietnamese-history-themed animation to be released on December 2020 in Vietnam</p></a>
-  </div>
-  <div>
-    <a href="project8.html" style="text-decoration: none;"><img class='grid-item grid-item-2' src='gif/chope.gif' alt=''>
-    <p><b>chope (2020) </b> – an infographics video about new safety policies during Covid-19 pandemic for Chope, an online reservation app</p></a>
-  </div>
-  <div>
-    <a href="project7.html" style="text-decoration: none;"><img class='grid-item grid-item-3' src='gif/sccc.gif' alt=''>
-    <p><b>sccc (2020) </b> – an infographics video about proper etiquettes inside the gallery for Singapore Chinese Culture Center (SCCC), Singapore</p></a>
-  </div>
-  <div>
-    <a href="project5.html" style="text-decoration: none;"><img class='grid-item grid-item-4' src='gif/temasek.gif' alt=''>
-    <p><b>temasek (2017) </b> – an infographics video about Real Estate Investment Trust (REITs) for Temasek, Singapore</p></a>
-  </div>
-  <div>
-    <a href="project4.html" style="text-decoration: none;"><img class='grid-item grid-item-5' src='gif/manmade.gif' alt=''>
-    <p><b>manmade (2015) </b> –  an underwater visual effect short film about the journey of a boy into the deep sea to discover the mutation of sea creatures</p></a>
-  </div>
-   <div>
-    <a href="space.html" style="text-decoration: none;"><img class='grid-item grid-item-5' src='gif/space.gif' alt=''>
-    <p><b>space (2014) </b> – a short animation about the mutual relationship between human and nature sharing the same space</p></a>
-  </div>
-  <div>
-    <a href="project6.html" style="text-decoration: none;"><img class='grid-item grid-item-5' src='gif/mindblown.gif' alt=''>
-    <p><b>mindblown (2014) </b> – an animated series based on the Mindblown-themed illustrations for Kult3D Gallery, Singapore</p></a>
-  </div>
-</div>
-
-<h2>.demo reels and others</h1>
-<div class="grid-container2">
-  <div>
-    <a href="InteractiveDemo.html" style="text-decoration: none;"><img class='grid-item grid-item-1' src='gif/interactive.gif' alt=''>
-    <p><b>interactive demo reel (2020) </b> – a short compilation of featured interactive projects</p></a>
-  </div>
-  <div>
-    <a href="AnimationDemo.html" style="text-decoration: none;"><img class='grid-item grid-item-2' src='gif/animation.gif' alt=''>
-    <p><b>animation demo reel (2020) </b> – a short compilation of featured motion graphics and animations</p></a>
-  </div>
-  <div>
-    <a href="webdesign.html" style="text-decoration: none;"><img class='grid-item grid-item-3' src='gif/cycloid.gif'  alt=''>
-    <p><b>cycloid (2020) </b> – a website design and video concept demo for Cycloid, a tech start-up based in Paris, France</p></a>
-  </div>
-  <div>
-    <a href="sketches.html" style="text-decoration: none;"><img class='grid-item grid-item-4' src='gif/sketches.gif' alt=''>
-    <p><b>sketches (2015) </b> – a collection of sketches and paintings</p></a>
-  </div>
-
-</div>
-
-
-<h2>.research</h1>
-<div class="proj-content">
-	<p style="font-size: 16px"><i><b>virtual museums (2020) </b> – a master's thesis about the performance of virtual museums during the Covid-19 crisis</i></p>
-</div>
-<!-- 	<audio autoplay loop src="audio/inspiracion.mp3" controls>
-		<p>If you are reading this, it is because your browser does not support the audio element.</p>
-	</audio> -->
-  </body>
+<script src="main.js"></script>
+</body>
 </html>
