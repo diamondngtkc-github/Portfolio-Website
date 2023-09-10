@@ -1,91 +1,129 @@
 <!DOCTYPE html>
 <html>
 <head>
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-176863698-1"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+  <title>About - Diamond Nguyen</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="main.css">
+  <style>
+     .wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-sizing: border-box;
+    }
+    .container {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-around;
+      width: 100%;
+    }
+    .text {
+      flex: 3;
+      text-align: left;
+      padding-left: 40px;
+      padding-right: 40px;
+    }
+    .photo {
+      flex: 1;
+      padding-top: 5px;
+    }
+    
 
-  gtag('config', 'UA-176863698-1');
- </script>
-	<title>Diamond Nguyen Portfolio</title>
-	<link rel="shortcut icon" href="img/icon.png" type="image/x-icon">
-	<meta charset="utf-8"/>
-	<link rel="stylesheet" type="text/css" href="main.css">
+  </style>
 </head>
-
 <body>
-	<header>
-		<h1><a href="index.html" style="color: #000; text-decoration: none">DIAMOND NGUYEN</h1>
-<div class="navbar">
-  <a href="about.html">about me</a>
+  <button id="back-to-top-button">↑</button>
+  <script>
+    // JavaScript code goes here
+    document.getElementById('back-to-top-button').addEventListener('click', function() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
 
+    window.addEventListener('scroll', function() {
+      var button = document.getElementById('back-to-top-button');
+      if (window.pageYOffset > 200) {
+        button.style.display = 'block';
+      } else {
+        button.style.display = 'none';
+      }
+    });
+  </script>
+    <header>
+      <nav>
+          <div class="left-nav">
+              <ul>
+                  <li class="about-link"><a href="about.html">About</a></li>
+              </ul>
+          </div>
+          <div class="center-nav">
+              <a href="index2.html" class="nav-brand">DIAMOND NGUYEN</a>
+          </div>
+          <div class="right-nav">
+              <ul>
+                  <li class="dropdown">
+                      <a href="#teach">teach</a>
+                      <div class="dropdown-content">
+                          <a href="DigitalNarrative.html">Digital Narrative</a>
+                          <a href="2dAnimation.html">2D Animation</a>
+                          <a href="3dAnimation.html">3D Animation</a>
+                          <a href="VJEvents.html">VJ Events</a>
+                      </div>
+                  </li>
+                  <li class="dropdown">
+                      <a href="#design">design</a>
+                      <div class="dropdown-content">
+                          <a href="VideoTemplates.html">Video Templates</a>
+                          <a href="AIActors.html">AI Actors</a>
+                      </div>
+                  </li>
+                  <li class="dropdown">
+                      <a href="#animate">animate</a>
+                      <div class="dropdown-content">
+                          <a href="FantasticFables.html">Fantastic Fables</a>
+                          <a href="BNDC.html">BNDC</a>
+                          <a href="Mindblown.html">Mindblown</a>
+                          <a href="ManMade.html">ManMade</a>
+                      </div>
+                  </li>
+                  <li class="dropdown">
+                      <a href="#interact">interact</a>
+                      <div class="dropdown-content">
+                          <a href="Skyportal.html">Skyportal</a>
+                          <a href="OUE.html">OUE</a>
+                          <a href="LivingSpace.html">LivingSpace</a>
+                          <a href="Astar.html">A*star</a>
+                      </div>
+                  </li>
+              </ul>
+          </div>
+      </nav>
+      <div class="header-content">
+          <h2>Multimedia Artist and Educator</h2>
+      </div>
+  </header>
 
-  <div class="dropdown">
-    <button class="dropbtn" >others
-      <i class="fa fa-caret-down"></i>
-    </button>
-    <div class="dropdown-content">
-      <a href="webdesign.html">cycloid</a>
-      <a href="sketches.html">sketches</a>
+  <main>
+    <div class="wrapper">
+      <div class="container">
+        <div class="photo">
+          <img src="img/diamond 2.jpg" alt="Diamond Nguyen">
+        </div>
+        <div class="text">
+          <p>Thank you for visiting my virtual home out of a billion websites on the net!</p>
+          <p>I'm Diamond Nguyen, a dedicated multimedia artist and educator. After spending more than a decade abroad studying and working, I've recently returned to my home in Ho Chi Minh City, Vietnam, with a background in 2D/3D animation and a fervor for the intertwining of Art, Design, and Technology.</p>
+          <p>My educational journey began at the Nanyang Technological University in Singapore, where I earned a Bachelor of Fine Arts in Digital Animation. From there, I ventured to the Burgundy School of Business in France to obtain a Master's degree in Arts and Cultural Management. My Master's thesis focused on "The Performance of Online/Virtual Museums during the COVID-19 Pandemic," igniting a passion for exploring the potential of virtual spaces in art education.</p>
+          <p>Today, as an Associate Lecturer in the Digital Media Program at the Royal Melbourne Institute of Technology in Saigon South Campus (RMIT Vietnam) and as the Lead Visual Designer & 3D Artist at Oxolo, I have the privilege of both applying and sharing my knowledge. I am continuously intrigued by how we can fuse Technology, Art, and Design to foster better learning experiences and promote public engagement.</p>
+          <p>Over the years, I have contributed to various animation projects as a freelance animator, and to the visual design of installations in Singapore, which has been a rewarding experience. Now, my next goal is to delve deeper into these realms by embarking on a rigorous PhD research project, allowing me to pioneer new pathways in our understanding of digital arts and education.</p>
+          <p>Guided by a deep interest in my field and a commitment to advancing the fusion of Technology, Art, and Design in education, I'm excited about the possibilities the future holds. If you're a fellow artist, an educator, a potential collaborator, or a curious visitor, I invite you to connect with me. You can reach me via email at diamondngtkc[at]gmail[dot]com. I look forward to exploring how we can pioneer change and ignite innovation in the world of digital arts together.</p>
+        </div>
     </div>
-  </div> 
-  <div class="dropdown">
-    <button class="dropbtn" >animation 
-      <i class="fa fa-caret-down"></i>
-    </button>
-    <div class="dropdown-content">
-      <a href="redhill.html">redhill</a>
-      <a href="project3.html">vskh</a>
-      <a href="project8.html">chope</a>
-      <a href="project7.html">sccc</a>
-      <a href="project5.html">temasek</a>
-      <a href="project4.html">manmade</a>
-      <a href="space.html">space</a>
-      <a href="project6.html">mindblown</a>
-    </div>
-  </div> 
+  </main>
+  
 
-  <div class="dropdown">
-    <button class="dropbtn">interactive
-      <i class="fa fa-caret-down"></i>
-    </button>
-    <div class="dropdown-content">
-      <a href="project1.html">sky portal</a>
-      <a href="project2.html">livingspace</a>
-      <a href="OUE.html">oue</a>
-      <a href="zenpond.html">zen pond</a>
-      <a href="vangogh.html">van gogh</a>
-      <a href="astar.html">astar</a>
-    </div>
-  </div> 
-    <div class="dropdown">
-    <button class="dropbtn" >demo reel
-      <i class="fa fa-caret-down"></i>
-    </button>
-    <div class="dropdown-content">
-      <a href="InteractiveDemo.html">interactive</a>
-      <a href="AnimationDemo.html">animation</a>
-  </div>
-</div>
-</div>
+  <footer>
+    &copy; 2023 Diamond Nguyen
+</footer>
 
-	</header>
-
-	
-	<div class="main-content"> 
-	<p><img src="img/diamond2.jpg" alt="diamond">
-		<p>Thank you for visiting my virtual home out of 1.8 billion websites out there! It is my pleasure to welcome you to my collection of work. You can call me Diamond.</p>
-		<p>I am finishing my <b>master’s degree in Arts and Cultural Management</b> at the Burgundy School of Business in Dijon, France. I also have a <b>bachelor's degree in Digital Animation</b> from the School of Art, Design, and Media, Nanyang Technological University, Singapore.</p>
-		<p>Before I departed for France, from October 2015 to August 2019, I worked as a <b>Visual Artist and User Experience Specialist</b> at IcebergX studio in Singapore. My expertise covered brainstorming, designing, and innovating effective creative projects from concept through completion for a myriad of well-established brands and clients. We leveraged <b>humans, data, and technologies</b> to be the branding and advertising expert. Our clients included many popular names who looked for innovative, interactive, and immersive solutions to attract huge audiences in Singapore and neighboring Asian countries such as <b>OUE</b> (Real Estate Owner and Developer), <b>Singapore National Library Board</b> - NLB,<b> Gardens by the Bay</b>, <b>Changi Airport</b>, <b>Singapore Housing Development Board</b> - HDB Gallery, etc.</p>
-		<p>Besides the interest in arts and technology, exploring different cultures and meeting people from diverse backgrounds have encouraged me to travel the world and view things from alternative perspectives. After exciting trips, not only have I brought back with me unforgettable memories about places and people, but I also have the chance to expand my food palate and enrich my cookbook. I do enjoy cooking for myself and my loved ones every day and I truly believe you are what you eat.</p>
-		<p>If you want to contact me for future collaborations, please email me at <a href="mailto:diamondngktc@gmail.com" style="color: #000;text-decoration: none; font-weight: bold">diamondngktc@gmail.com</a> </p>
-	</p>
-</div>
-
-
-
-  </body>
+<script src="main.js"></script>
+</body>
 </html>

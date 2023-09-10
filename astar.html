@@ -1,149 +1,201 @@
 <!DOCTYPE html>
 <html>
 <head>
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-176863698-1"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'UA-176863698-1');
-</script>
-	<title>Diamond Nguyen Portfolio</title>
-	<link rel="shortcut icon" href="img/icon.png" type="image/x-icon">
-	<meta charset="utf-8"/>
-	<link href='https://fonts.googleapis.com/css?family=Lato:400,300,100,700,900' rel='stylesheet' type='text/css'>
-	<link rel="stylesheet" type="text/css" href="main.css">
+  <meta charset="UTF-8">
+  <meta name="description" content="Diamond Nguyen, a Multimedia Artist and Educator.">
+  <link rel="icon" href="img/icon.png" type="image/x-icon">
+  <title>Diamond Nguyen - Multimedia Artist and Educator</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css" />
+  <link rel="stylesheet" href="main.css">
+  <style>
+    .content-container {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding-bottom: 500px;
+    }
+    .project-images {
+        flex: 1;
+        justify-content: space-between;
+        margin-bottom: 10px;
+        max-width: 600px;
+        position: relative;
+        width: 100%;
+    }
+    .project-info {
+        flex: 1;
+        text-align: left;
+        padding-left: 40px;
+    }
+    .image-slider figure img {
+        width: 100%;
+        height: auto;
+    }
+    .slick-slide {
+        height: auto;
+    }
+    .slick-slide img {
+        width: 100%;
+        height: auto;
+    }
+    .slick-dots li button:before {
+        font-size: 15px;
+    }
+    .slick-dots li.slick-active button:before {
+        color: #8c00ff;
+    }
+    figcaption {
+      font-style: italic;
+      margin-top: 10px;
+	  margin-bottom: 20px;
+      font-size: 18px;
+    }
+    #back-to-top-button {
+        display: none;
+    }
+  </style>
 </head>
-
 <body>
-	<header>
-		<h1><a href="index.html" style="color: #000;text-decoration: none">DIAMOND NGUYEN</h1>
-<div class="navbar">
-  <a href="about.html">about me</a>
+    <button id="back-to-top-button" style="display: none;">↑</button>
+    <header>
+        <nav>
+            <div class="left-nav">
+                <ul>
+                    <li class="about-link"><a href="about.html">About</a></li>
+                </ul>
+            </div>
+            <div class="center-nav">
+                <a href="index2.html" class="nav-brand">DIAMOND NGUYEN</a>
+            </div>
+            <div class="right-nav">
+                <ul>
+                    <li class="dropdown">
+                        <a href="#teach">teach</a>
+                        <div class="dropdown-content">
+                            <a href="DigitalNarrative.html">Digital Narrative</a>
+                            <a href="2dAnimation.html">2D Animation</a>
+                            <a href="3dAnimation.html">3D Animation</a>
+                            <a href="VJEvents.html">VJ Events</a>
+                        </div>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#design">design</a>
+                        <div class="dropdown-content">
+                            <a href="VideoTemplates.html">Video Templates</a>
+                            <a href="AIActors.html">AI Actors</a>
+                        </div>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#animate">animate</a>
+                        <div class="dropdown-content">
+                            <a href="FantasticFables.html">Fantastic Fables</a>
+                            <a href="BNDC.html">BNDC</a>
+                            <a href="Mindblown.html">Mindblown</a>
+                            <a href="ManMade.html">ManMade</a>
+                        </div>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#interact">interact</a>
+                        <div class="dropdown-content">
+                            <a href="Skyportal.html">Skyportal</a>
+                            <a href="OUE.html">OUE</a>
+                            <a href="LivingSpace.html">LivingSpace</a>
+                            <a href="Astar.html">A*star</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <div class="header-content">
+            <h2>Multimedia Artist and Educator</h2>
+        </div>
+    </header>
 
+    <main>
+        <section class="content">
+			<div class="content-container">
+				<div class="project-images">
+				  <div class="image-slider">
+                    <div>
+						<iframe width="600" height="333" src="https://www.youtube.com/embed/XoWjo31y4_8" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        <figcaption>Showreel of the project A*star</figcaption>
+					</div>                    
+					<div>
+                        <img src="img/astar-image2.jpg" alt="image1" style="width:100%; height:auto;">
+                        <figcaption>Simple setup with a hemisphere foam and a KINECT sensor</figcaption>
+                    </div>
+                    <div>
+                        <img src="img/astar-image8.jpg" alt="image2" style="width:100%; height:auto;">
+                        <figcaption>Networks in TouchDesigner software</figcaption>
+					</div>
+                    <div>
+                        <img src="img/astar-image1.jpg" alt="image3" style="width:100%; height:auto;">
+                        <figcaption>Some scenes from the show (1)</figcaption>
+					</div>
+                    <div>
+                        <img src="img/astar-image3.jpg" alt="image4" style="width:100%; height:auto;">
+                        <figcaption>Some scenes from the show (2)</figcaption>
+					</div>
+                    <div>
+                        <img src="img/astar-image4.jpg" alt="image5" style="width:100%; height:auto;">
+                        <figcaption>Some scenes from the show (3)</figcaption>
+					</div>
+					<div>
+                        <img src="img/astar-image5.jpg" alt="image5" style="width:100%; height:auto;">
+                        <figcaption>Some scenes from the show (4)</figcaption>
+					</div>
+                </div>
+			</div>
+                <article class="project-info">
+                    <p class="project-desc"><b>A*star (2016). </b>This was the first personal interactive piece that I produced. The idea was to have a mouse-free and impressive presentation that not only captured the audiences’ attention but also suspended the disbelief. I used a hemisphere foam as the centerpiece and created compatible visual effects around the shape. The presenter would be able to use their distinguished gestures and sounds to trigger the visuals. The 3D effects enabled audiences to enter another dimension and enjoy the short narrative of A*STAR as an innovative agency in Singapore.</p>
+                    <div class="project-details">
+                        <p>Technology: Kinect, Projection Mapping</p>
+                        <p>Role: Concept, Visual Artist, and Programmer</p>
+                        <p>Agency: <a href="http://icebergx.com/">IcebergX</a></p>
+                        <p>Watch: <a href="https://www.youtube.com/embed/XoWjo31y4_8">here</a></p>
+                    </div>
+                </article>
+            </div>
+        </section>
+    </main>
 
-  <div class="dropdown">
-    <button class="dropbtn" >others
-      <i class="fa fa-caret-down"></i>
-    </button>
-    <div class="dropdown-content">
-    	<a href="webdesign.html">cycloid</a>
-    	<a href="sketches.html">sketches</a>
-    </div>
-  </div> 
-  <div class="dropdown">
-    <button class="dropbtn" >animation 
-      <i class="fa fa-caret-down"></i>
-    </button>
-    <div class="dropdown-content">
-      <a href="redhill.html">redhill</a>
-      <a href="project3.html">vskh</a>
-      <a href="project8.html">chope</a>
-      <a href="project7.html">sccc</a>
-      <a href="project5.html">temasek</a>
-      <a href="project4.html">manmade</a>
-      <a href="space.html">space</a>
-      <a href="project6.html">mindblown</a>
-    </div>
-  </div> 
+<footer>
+	&copy; 2023 Diamond Nguyen
+</footer>
 
-  <div class="dropdown">
-    <button class="dropbtn">interactive
-      <i class="fa fa-caret-down"></i>
-    </button>
-    <div class="dropdown-content">
-      <a href="project1.html">sky portal</a>
-      <a href="project2.html">livingspace</a>
-      <a href="OUE.html">oue</a>
-      <a href="zenpond.html">zen pond</a>
-      <a href="vangogh.html">van gogh</a>
-      <a href="astar.html">astar</a>
-    </div>
-  </div> 
-    <div class="dropdown">
-    <button class="dropbtn" >demo reel
-      <i class="fa fa-caret-down"></i>
-    </button>
-    <div class="dropdown-content">
-      <a href="InteractiveDemo.html">interactive</a>
-      <a href="AnimationDemo.html">animation</a>
-  </div>
-</div>
-</div>
-
-	</header>
-
-		<div class="proj-brief">   
-			<p style="font-size:1vw"><b>astar (2016). </b>A*STAR was the first personal interactive piece that I produced. The idea was to have a mouse-free and impressive presentation that not only captured the audiences’ attention but also suspended the disbelief. I used a hemisphere foam as the centerpiece and created compatible visual effects around the shape. The presenter would be able to use their distinguished gestures and sounds to trigger the visuals. The 3D effects enabled audiences to enter another dimension and enjoy the short narrative of A*STAR as an innovative agency in Singapore. </p>
-			<p style="font-size:1vw">Technology: Kinect, Projection Mapping</p>
-			<p style="font-size:1vw">Role: Concept, Visual Artist, and Programmer </p>
-			<p style="font-size:1vw">Agency: <a href="https:/www.icebergX.com" style="color: #000;text-decoration: none; font-weight: bold">IcebergX</a></p>
-		</div>
-		
-		<div class="proj-video"> 
-			<iframe width="1120" height="660" src="https://www.youtube.com/embed/XoWjo31y4_8" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>		</div>
-		</div>
-		
-		<div class="proj-content"> 
-			<p style="font-size:3vw; font-weight:bold; font-family: 'Century gothic', serif;">KEY VISUALS</p>
-		</div>
-		
-		<div class="proj-image">
-			<img src="img/astar-image2.jpg" alt="image1" class="responsive">
-		</div>
-		
-		<div class="proj-content"> 
-			<p style="font-size:1vw">Simple setup with a hemisphere foam and a KINECT sensor</p>
-		</div>
-
-		<div class="proj-image">
-			<img src="img/astar-image8.jpg" alt="image1" class="responsive">
-		</div>
-		
-		<div class="proj-content"> 
-			<p style="font-size:1vw">Networks in TouchDesigner software</p>
-		</div>
-		
-		<div class="proj-image">
-			<img src="img/astar-image1.jpg" alt="image3" class="responsive">
-			<img src="img/astar-image3.jpg" alt="image4" class="responsive">
-			<img src="img/astar-image4.jpg" alt="image3" class="responsive">
-			<img src="img/astar-image5.jpg" alt="image4" class="responsive">
-		</div>
-		
-		<div class="proj-content"> 
-			<p style="font-size:1vw">Some scenes from the show</p>
-		</div>
-			
-	<footer>
-		<div class="proj-list">
-			<ul>	
-				<li><a href="index.html" style=" font-size: 12px;  font-family: 'Helvetica Neue', Arial, serif;">ALL</a></li>
-				<li><a href="project1.html" style=" font-size: 12px;  font-family: 'Helvetica Neue', Arial, serif;">SKY PORTAL</a></li>
-				<li><a href="project2.html" style="font-size: 12px;  font-family: 'Helvetica Neue', Arial, serif;">LIVINGSPACE</a></li>
-				<li><a href="OUE.html" style="font-size: 12px;  font-family: 'Helvetica Neue', Arial, serif;">OUE</a></li>	
-				<li><a href="zenpond.html" style="font-size: 12px;  font-family: 'Helvetica Neue', Arial, serif;">ZEN POND</a></li>
-				<li><a href="vangogh.html" style="font-size: 12px;  font-family: 'Helvetica Neue', Arial, serif;">VAN GOGH</a></li>
-				<li><a href="astar.html" style="color: #000; font-size: 12px; font-weight:bold; font-family: 'Helvetica Neue',Arial, serif;">ASTAR</a></li>
-				<li><a href="redhill.html" style="font-size: 12px; font-family: 'Helvetica Neue', Arial, serif;">REDHILL</a></li>
-				<li><a href="project3.html" style="font-size: 12px; font-family: 'Helvetica Neue', Arial, serif;">VSKH</a></li>
-				<li><a href="project8.html"style="font-size: 12px;  font-family: 'Helvetica Neue',Arial, serif;">CHOPE</a></li>
-				<li><a href="project7.html" style="font-size: 12px; font-family: 'Helvetica Neue', Arial, serif;">SCCC</a></li>
-				<li><a href="project5.html" style="font-size: 12px; font-family: 'Helvetica Neue', Arial, serif;">TEMASEK</a></li>
-				<li><a href="project4.html" style="font-size: 12px; font-family: 'Helvetica Neue', Arial, serif;">MANMADE</a></li>
-				<li><a href="space.html" style="font-size: 12px; font-family: 'Helvetica Neue', Arial, serif;">SPACE</a></li>
-				<li><a href="project6.html" style="font-size: 12px; font-family: 'Helvetica Neue', Arial, serif;">MINDBLOWN</a></li>
-				<li><a href="webdesign.html" style="font-size: 12px; font-family: 'Helvetica Neue', Arial, serif;">CYCLOID</a></li>
-				<li><a href="InteractiveDemo.html" style="font-size: 12px; font-family: 'Helvetica Neue',Arial, serif;">INTERACTIVE</a></li>
-				<li><a href="AnimationDemo.html" style="font-size: 12px; font-family: 'Helvetica Neue',Arial, serif;">ANIMATION</a></li>
-				<li><a href="sketches.html" style="font-size: 12px; font-family: 'Helvetica Neue',Arial, serif;">SKETCHES</a></li>
-			</ul>	
-		</div>
-	</footer>
-<!-- 	<audio autoplay loop src="audio/inspiracion.mp3" controls>
-		<p>If you are reading this, it is because your browser does not support the audio element.</p>
-	</audio> -->
-  </body>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
+	<script>
+		$(document).ready(function(){
+        $('.image-slider').slick({
+            dots: true,
+            infinite: true,
+            speed: 500,
+            fade: true,
+            cssEase: 'linear',
+            autoplay: true,
+            autoplaySpeed: 2000,
+            onPlaying: function(){
+            // Stop the autoplay
+            $(this).slick('setAutoplay', false);
+            },
+            click: function(event){
+            // If the video was clicked, stop the autoplay
+            if ($(event.target).is('iframe')) {
+                $(this).slick('setAutoplay', false);
+            }
+            // Resume the autoplay when the video stops playing
+            $(this).on('slickEnded', function(){
+                $(this).slick('setAutoplay', true);
+            });
+            }
+        });
+        });
+	</script>
+	<script src="main.js"></script>
+</body>
 </html>

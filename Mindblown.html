@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="description" content="Diamond Nguyen, a Multimedia Artist and Educator.">
+  <link rel="icon" href="img/icon.png" type="image/x-icon">
+  <title>Diamond Nguyen - Multimedia Artist and Educator</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css" />
+  <link rel="stylesheet" href="main.css">
+  <style>
+    .content-container {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding-bottom: 500px;
+    }
+    .project-images {
+        flex: 1;
+        justify-content: space-between;
+        margin-bottom: 10px;
+        max-width: 600px;
+        position: relative;
+        width: 100%;
+    }
+    .project-info {
+        flex: 1;
+        text-align: left;
+        padding-left: 40px;
+    }
+    .image-slider figure img {
+        width: 100%;
+        height: auto;
+    }
+    .slick-slide {
+        height: auto;
+    }
+    .slick-slide img {
+        width: 100%;
+        height: auto;
+    }
+    .slick-dots li button:before {
+        font-size: 15px;
+    }
+    .slick-dots li.slick-active button:before {
+        color: #00b909;
+    }
+    figcaption {
+      font-style: italic;
+      margin-top: 10px;
+      margin-bottom: 20px;
+      font-size: 18px;
+    }
+    #back-to-top-button {
+        display: none;
+    }
+  </style>
+</head>
+<body>
+    <button id="back-to-top-button" style="display: none;">↑</button>
+    <header>
+        <nav>
+            <div class="left-nav">
+                <ul>
+                    <li class="about-link"><a href="about.html">About</a></li>
+                </ul>
+            </div>
+            <div class="center-nav">
+                <a href="index2.html" class="nav-brand">DIAMOND NGUYEN</a>
+            </div>
+            <div class="right-nav">
+                <ul>
+                    <li class="dropdown">
+                        <a href="#teach">teach</a>
+                        <div class="dropdown-content">
+                            <a href="DigitalNarrative.html">Digital Narrative</a>
+                            <a href="2dAnimation.html">2D Animation</a>
+                            <a href="3dAnimation.html">3D Animation</a>
+                            <a href="VJEvents.html">VJ Events</a>
+                        </div>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#design">design</a>
+                        <div class="dropdown-content">
+                            <a href="VideoTemplates.html">Video Templates</a>
+                            <a href="AIActors.html">AI Actors</a>
+                        </div>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#animate">animate</a>
+                        <div class="dropdown-content">
+                            <a href="FantasticFables.html">Fantastic Fables</a>
+                            <a href="BNDC.html">BNDC</a>
+                            <a href="Mindblown.html">Mindblown</a>
+                            <a href="ManMade.html">ManMade</a>
+                        </div>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#interact">interact</a>
+                        <div class="dropdown-content">
+                            <a href="Skyportal.html">Skyportal</a>
+                            <a href="OUE.html">OUE</a>
+                            <a href="LivingSpace.html">LivingSpace</a>
+                            <a href="Astar.html">A*star</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <div class="header-content">
+            <h2>Multimedia Artist and Educator</h2>
+        </div>
+    </header>
+  <main>
+    <section class="content">
+      <div class="content-container">
+        <div class="project-images">
+          <div class="image-slider">
+            <div>
+                <iframe width="600" height="333" src="https://www.youtube.com/embed/eE4dWuadaFU" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                <figcaption>Mindblown Full Animation</figcaption>
+            </div>
+            <div>
+                <img src="img/image7.jpg" alt="image1">
+                <figcaption>Key visual</figcaption>
+            </div>
+            <div>
+                <img src="img/Mindblown magazine.jpg" alt="image2">
+                <figcaption>Kult Magazine Mindblown Edition</figcaption>
+            </div>
+          </div>
+        </div>
+          <article class="project-info">
+            <p class="project-desc"><b>mindblown (2014). </b>The animated series Mindblown was created during my internship at Kult3D Gallery together with another animation intern Yew Ee Venn. Every quarter the gallery commissioned talented local artists to do themed illustrations for their magazine. Mindblown was the first edition that we turned flat graphics into a lively animation. The series gained instant attention from the audiences with thousands of views on Facebook and doubled the followers after a month.</p>
+                <div class="project-details">
+                    <p>Medium: 2D animation</p>
+                    <p>Role: Animator</p>
+                    <p>Agency: <a href="https://www.kult.online/">Kult</a></p>
+                    <p>Watch: <a href="https://www.youtube.com/embed/eE4dWuadaFU">here</a></p>
+                </div>
+          </article>
+        </div>
+    </section>
+  </main>
+
+<footer>
+    &copy; 2023 Diamond Nguyen
+</footer>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
+    <script>
+        $(document).ready(function(){
+        $('.image-slider').slick({
+            dots: true,
+            infinite: true,
+            speed: 500,
+            fade: true,
+            cssEase: 'linear',
+            autoplay: true,
+            autoplaySpeed: 2000
+        });
+    });
+    </script>
+    <script src="main.js"></script>
+</body>
+</html>
