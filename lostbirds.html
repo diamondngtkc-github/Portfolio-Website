@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lost Birds — Chim Lạc</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 100%; height: 100%; background: #000; overflow: hidden; }
+canvas { display: block; position: absolute; top: 0; left: 0; }
+#ui {
+  position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+  display: none;
+  flex-direction: column; align-items: center; gap: 10px;
+  pointer-events: none; z-index: 20;
+}
+#state-label {
+  font-family: Georgia, serif; font-size: 13px; letter-spacing: 0.18em;
+  text-transform: uppercase; color: rgba(255,220,140,0.75); transition: color 1.2s ease;
+}
+#noise-bar-wrap { width: 200px; height: 2px; background: rgba(255,255,255,0.08); border-radius: 2px; }
+#noise-bar { height: 2px; width: 0%; background: rgba(255,220,140,0.6); border-radius: 2px; transition: width 0.08s linear; }
+#controls { pointer-events: all; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+#mic-btn {
+  background: transparent; border: 1px solid rgba(255,220,140,0.35);
+  color: rgba(255,220,140,0.75); font-family: Georgia, serif; font-size: 12px;
+  letter-spacing: 0.12em; padding: 7px 20px; border-radius: 20px; cursor: pointer;
+  transition: border-color 0.3s, color 0.3s;
+}
+#mic-btn:hover  { border-color: rgba(255,220,140,0.9); color: rgba(255,220,140,1); }
+#mic-btn.active { border-color: rgba(255,220,140,0.9); color: rgba(255,220,140,1); }
+#hint { font-family: Georgia, serif; font-size: 11px; color: rgba(255,255,255,0.2); letter-spacing: 0.06em; }
+#loading {
+  position: fixed; inset: 0; background: #000;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 16px; z-index: 100;
+}
+#loading p { font-family: Georgia, serif; font-size: 13px; letter-spacing: 0.14em; color: rgba(255,220,140,0.6); }
+#loading-bar-wrap { width: 180px; height: 2px; background: rgba(255,255,255,0.08); border-radius: 2px; }
+#loading-bar { height: 2px; width: 0%; background: rgba(255,220,140,0.5); border-radius: 2px; transition: width 0.1s linear; }
+#map-hint {
+  position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+  font-family: Georgia, serif; font-size: 12px; letter-spacing: 0.1em;
+  color: rgba(255,220,140,0.6); pointer-events: none; z-index: 40; display: none;
+}
+#title-block { position: fixed; bottom: 24px; left: 28px; pointer-events: none; z-index: 20; }
+#title-block h1 {
+  font-family: Georgia, serif; font-size: 14px; font-weight: normal;
+  color: rgba(255,220,140,0.45); letter-spacing: 0.12em;
+}
+#title-block p { font-family: Georgia, serif; font-size: 11px; color: rgba(255,255,255,0.2); letter-spacing: 0.06em; margin-top: 3px; }
+</style>
+</head>
+<body>
+
+<div id="loading">
+  <p id="loading-text">Loading bird frames…</p>
+  <div id="loading-bar-wrap"><div id="loading-bar"></div></div>
+</div>
+
+<!-- Main canvas — birds draw here -->
+<canvas id="c"></canvas>
+<!-- Mapping UI overlay — only visible in mapping mode -->
+<canvas id="c-map-ui" style="display:none; z-index:31; position:fixed; top:0; left:0;"></canvas>
+
+<div id="ui">
+  <div id="state-label">Harmony</div>
+  <div id="noise-bar-wrap"><div id="noise-bar"></div></div>
+  <div id="controls">
+    <button id="mic-btn">Enable microphone</button>
+    <div id="hint">M — mapping mode · Space — crowd noise</div>
+  </div>
+</div>
+
+<div id="title-block">
+  <h1>Lost Birds — Chim Lạc</h1>
+  <p>Diamond Nguyen · Sound-responsive installation</p>
+</div>
+<div id="map-hint">Mapping mode · Drag corners to fit surface · M to exit · R to reset</div>
+
+<script>
+/* ============================================================
+   CONFIGURATION
+   ============================================================ */
+const FRAME_FOLDER   = 'Bird Flight';
+const FRAME_PREFIX   = 'Bird_';
+const FRAME_EXT      = '.png';
+const FRAME_COUNT    = 34;
+const FRAME_PADDING  = 4;
+const FRAME_START    = 1;
+
+/* Depth */
+const Z_NEAR       = 1.0;
+const Z_FAR        = 0.04;
+const Z_NEAR_ALPHA = 1.0;
+const Z_FAR_ALPHA  = 0.45;
+const BIRD_SIZE_BASE = 150;
+
+/* Calm migration */
+const CALM_MAX_BIRDS   = 56;   /* 2× previous 28 */
+const CALM_SPEED       = 1.6;
+const CALM_FRAME_SPEED = 4;
+const CALM_SPAWN_TICKS = 20;   /* 2× faster spawning */
+
+/* Chaos */
+const CHAOS_MAX_BIRDS   = 40;
+const CHAOS_SPEED       = 2.0;  /* slow enough to see, fast enough to feel chaotic */
+const CHAOS_FRAME_SPEED = 1;
+const CHAOS_THRESHOLD   = 0.4;
+
+/* ── Reynolds boids parameters ──
+   Birds perceive neighbors within a cone: NEIGHBOR_RADIUS px,
+   NEIGHBOR_ANGLE degrees forward. Only visible neighbors steer them.
+   Three rules: separation (avoid crowding), alignment (match heading),
+   cohesion (move toward group center). Weights control blend. */
+const NEIGHBOR_RADIUS = 160;   /* perception distance */
+const NEIGHBOR_ANGLE  = 270;   /* forward cone in degrees */
+
+/* Calm weights — crossing behavior, no corner flocking */
+const CALM_SEP_W  = 0.8;   /* light separation — avoid bumping */
+const CALM_ALI_W  = 0.0;   /* no alignment — birds don't follow each other */
+const CALM_COH_W  = 0.0;   /* no cohesion — no pulling toward group */
+const CALM_SEP_R  = 35;
+const CALM_MAX_F  = 0.02;
+
+/* Chaos weights — rules invert and amplify */
+const CHAOS_SEP_W = 3.0;   /* extreme separation — flock tears apart */
+const CHAOS_ALI_W = -0.3;  /* negative alignment — neighbors repel heading */
+const CHAOS_COH_W = 0.04;  /* near-zero cohesion — no group pull */
+const CHAOS_SEP_R = 60;
+const CHAOS_MAX_F = 0.18;
+/* ============================================================ */
+
+const canvas    = document.getElementById('c');
+const ctx       = canvas.getContext('2d');
+const uiCanvas  = document.getElementById('c-map-ui');
+const uiCtx     = uiCanvas.getContext('2d');
+
+const stateLabel  = document.getElementById('state-label');
+const noiseBar    = document.getElementById('noise-bar');
+const micBtn      = document.getElementById('mic-btn');
+const loadingEl   = document.getElementById('loading');
+const loadingText = document.getElementById('loading-text');
+const loadingBar  = document.getElementById('loading-bar');
+const mapHint     = document.getElementById('map-hint');
+
+let W, H;
+function resize() {
+  W = canvas.width = uiCanvas.width = window.innerWidth;
+  H = canvas.height= uiCanvas.height= window.innerHeight;
+  resizeOffscreen();
+  /* Always reset corners to full screen — no saved warp */
+  corners = defaultCorners();
+}
+window.addEventListener('resize', resize);
+
+/* ── Projection mapping — corner-pin warp ──────────────────
+   Press M to enter mapping mode. Drag the four corner handles
+   to align with your projection surface. Press M to exit.
+   Corners save to localStorage and persist between sessions.
+   Press R while in mapping mode to reset to full screen.
+
+   The warp works by slicing the canvas into horizontal strips
+   and skewing each strip to fit the corner-pinned quadrilateral.
+   Works well for flat surfaces (walls, floors, angled panels).
+   ─────────────────────────────────────────────────────────── */
+const STORAGE_KEY = 'lostbirds_corners_v7b';
+const WARP_STRIPS = 80;
+const HANDLE_R    = 14;
+
+let corners      = null;   /* initialised after first resize() */
+let mappingMode  = false;
+let dragIndex    = -1;
+let dragOffX = 0, dragOffY = 0;
+
+function defaultCorners() {
+  return [{ x:0, y:0 }, { x:W, y:0 }, { x:W, y:H }, { x:0, y:H }];
+}
+function saveCorners() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(corners)); } catch(e) {}
+}
+function loadSavedCorners() {
+  try {
+    const s = JSON.parse(localStorage.getItem(STORAGE_KEY));
+    if (s && s.length === 4) return s;
+  } catch(e) {}
+  return null;
+}
+function lerp(a, b, t) { return a + (b-a)*t; }
+
+/* Offscreen canvas — birds always render here, then we warp to main canvas */
+const offscreen    = document.createElement('canvas');
+const offCtx       = offscreen.getContext('2d');
+function resizeOffscreen() { offscreen.width=W; offscreen.height=H; }
+
+/* Draw canvas content warped to the corner-pin quadrilateral.
+   Uses offscreen canvas as source — avoids getImageData / canvas taint issues. */
+function applyWarp() {
+  /* If corners are exactly full-screen, birds already drew to main canvas directly — skip */
+  const isDefault = corners[0].x===0 && corners[0].y===0 &&
+                    corners[1].x===W && corners[1].y===0 &&
+                    corners[2].x===W && corners[2].y===H &&
+                    corners[3].x===0 && corners[3].y===H;
+  if (isDefault) return;
+
+  /* Warp offscreen onto main canvas */
+  ctx.clearRect(0, 0, W, H);
+  const tl=corners[0], tr=corners[1], br=corners[2], bl=corners[3];
+  for (let i=0; i<WARP_STRIPS; i++) {
+    const t0=i/WARP_STRIPS, t1=(i+1)/WARP_STRIPS;
+    const sy0=t0*H, sh=H/WARP_STRIPS;
+    const x0=lerp(tl.x,bl.x,t0), y0=lerp(tl.y,bl.y,t0);
+    const x1=lerp(tr.x,br.x,t0), y1=lerp(tr.y,br.y,t0);
+    const x3=lerp(tl.x,bl.x,t1), y3=lerp(tl.y,bl.y,t1);
+    const tx=x1-x0, ty=y1-y0, lx=x3-x0, ly=y3-y0;
+    ctx.save();
+    ctx.setTransform(tx/W, ty/W, lx/sh, ly/sh, x0, y0);
+    ctx.drawImage(offscreen, 0, sy0, W, sh, 0, 0, W, sh);
+    ctx.restore();
+  }
+}
+
+function drawHandles() {
+  uiCtx.clearRect(0, 0, W, H);
+  if (!mappingMode || !corners) return;
+
+  /* Quad outline */
+  uiCtx.beginPath();
+  uiCtx.moveTo(corners[0].x, corners[0].y);
+  for (let i=1; i<4; i++) uiCtx.lineTo(corners[i].x, corners[i].y);
+  uiCtx.closePath();
+  uiCtx.strokeStyle = 'rgba(255,220,140,0.5)';
+  uiCtx.lineWidth = 1; uiCtx.setLineDash([6,4]); uiCtx.stroke(); uiCtx.setLineDash([]);
+
+  /* Diagonal guides */
+  uiCtx.beginPath();
+  uiCtx.moveTo(corners[0].x, corners[0].y); uiCtx.lineTo(corners[2].x, corners[2].y);
+  uiCtx.moveTo(corners[1].x, corners[1].y); uiCtx.lineTo(corners[3].x, corners[3].y);
+  uiCtx.strokeStyle = 'rgba(255,220,140,0.12)'; uiCtx.stroke();
+
+  /* Handles */
+  ['TL','TR','BR','BL'].forEach((lbl, i) => {
+    uiCtx.beginPath();
+    uiCtx.arc(corners[i].x, corners[i].y, HANDLE_R, 0, Math.PI*2);
+    uiCtx.fillStyle   = dragIndex===i ? 'rgba(255,220,140,0.9)' : 'rgba(255,220,140,0.3)';
+    uiCtx.strokeStyle = 'rgba(255,220,140,0.8)';
+    uiCtx.lineWidth   = 1.5; uiCtx.fill(); uiCtx.stroke();
+    uiCtx.fillStyle   = dragIndex===i ? '#000' : 'rgba(255,220,140,0.85)';
+    uiCtx.font='10px Georgia'; uiCtx.textAlign='center'; uiCtx.textBaseline='middle';
+    uiCtx.fillText(lbl, corners[i].x, corners[i].y);
+  });
+}
+
+uiCanvas.addEventListener('pointerdown', e => {
+  if (!mappingMode) return;
+  const r  = uiCanvas.getBoundingClientRect();
+  const px = e.clientX - r.left, py = e.clientY - r.top;
+  for (let i=0; i<4; i++) {
+    const dx=corners[i].x-px, dy=corners[i].y-py;
+    if (Math.sqrt(dx*dx+dy*dy) < HANDLE_R+8) {
+      dragIndex=i; dragOffX=dx; dragOffY=dy;
+      uiCanvas.setPointerCapture(e.pointerId); return;
+    }
+  }
+});
+uiCanvas.addEventListener('pointermove', e => {
+  if (!mappingMode || dragIndex<0) return;
+  const r = uiCanvas.getBoundingClientRect();
+  corners[dragIndex].x = Math.max(0, Math.min(W, e.clientX-r.left+dragOffX));
+  corners[dragIndex].y = Math.max(0, Math.min(H, e.clientY-r.top+dragOffY));
+  drawHandles();
+});
+uiCanvas.addEventListener('pointerup', () => {
+  if (dragIndex >= 0) { saveCorners(); dragIndex=-1; drawHandles(); }
+});
+
+function enterMapMode() {
+  mappingMode = true;
+  uiCanvas.style.display = 'block';
+  uiCanvas.style.pointerEvents = 'all';   /* MUST enable so handles receive clicks */
+  mapHint.style.display  = 'block';
+  document.getElementById('ui').style.display = 'none';
+  drawHandles();
+}
+function exitMapMode() {
+  mappingMode = false;
+  uiCanvas.style.display = 'none';
+  uiCanvas.style.pointerEvents = 'none';
+  mapHint.style.display  = 'none';
+  document.getElementById('ui').style.display = 'flex';
+  uiCtx.clearRect(0, 0, W, H);
+}
+
+/* ── Frame loader ── */
+function zeroPad(n, len) { return String(n).padStart(len, '0'); }
+const frames = new Array(FRAME_COUNT).fill(null);
+let framesReady = false;
+
+async function loadFrames() {
+  let loaded = 0;
+  await Promise.all(frames.map((_, i) => {
+    const src = `${FRAME_FOLDER}/${FRAME_PREFIX}${zeroPad(i+FRAME_START, FRAME_PADDING)}${FRAME_EXT}`;
+    return new Promise(resolve => {
+      const img = new Image();
+      img.onload  = () => { frames[i]=img; loaded++; updateProgress(loaded); resolve(); };
+      img.onerror = () => { loaded++; updateProgress(loaded); resolve(); };
+      img.src = src;
+    });
+  }));
+  if (frames.some(f => f !== null)) {
+    framesReady = true;
+    loadingEl.style.transition = 'opacity 0.6s';
+    loadingEl.style.opacity    = '0';
+    setTimeout(() => { loadingEl.style.display = 'none'; }, 600);
+  } else {
+    loadingText.textContent = 'No frames found — check folder name and run via local server';
+  }
+}
+function updateProgress(n) {
+  loadingBar.style.width  = Math.round((n/FRAME_COUNT)*100) + '%';
+  loadingText.textContent = `Loading bird frames… ${n} / ${FRAME_COUNT}`;
+}
+loadFrames();
+
+/* ── Global state ── */
+let noiseLevel=0, targetNoise=0;
+let micActive=false, analyser=null, freqData=null, simNoise=false;
+let tick=0, frameTick=0, frameIndex=0;
+let currentFrameSpeed = CALM_FRAME_SPEED;
+let prevChaosState=false, prevExtremeState=false, chaosBirdsInjected=false;
+
+const MODE_CROSS = 'cross';
+const MODE_LOOP  = 'loop';
+const MODE_CHAOS = 'chaos';
+const birds = [];
+
+/* ── Depth helpers ── */
+function randomZ() { return Z_FAR + Math.random()*(Z_NEAR-Z_FAR); }
+function zToSize(z) {
+  const t = (z-Z_FAR)/(Z_NEAR-Z_FAR);
+  return (H * 0.15) * (0.12 + Math.pow(t,1.4)*2.8);
+}
+function zToAlpha(z) {
+  const t = (z-Z_FAR)/(Z_NEAR-Z_FAR);
+  return Z_FAR_ALPHA + t*(Z_NEAR_ALPHA-Z_FAR_ALPHA);
+}
+function sortByDepth() { birds.sort((a,b) => b.z-a.z); } /* descending — far draws first, near draws on top */
+
+/* ── Reynolds helpers ── */
+const HALF_ANGLE_COS = Math.cos((NEIGHBOR_ANGLE/2) * Math.PI/180);
+
+function getNeighbors(b) {
+  const result = [];
+  for (const other of birds) {
+    if (other === b || other.dead) continue;
+    const dx = other.x - b.x, dy = other.y - b.y;
+    const distSq = dx*dx + dy*dy;
+    if (distSq > NEIGHBOR_RADIUS*NEIGHBOR_RADIUS) continue;
+    /* Check forward perception cone */
+    const speed = Math.sqrt(b.vx*b.vx + b.vy*b.vy) + 0.0001;
+    const fx=b.vx/speed, fy=b.vy/speed;
+    const dist = Math.sqrt(distSq) + 0.0001;
+    const dot  = fx*(dx/dist) + fy*(dy/dist);
+    if (dot > HALF_ANGLE_COS) result.push({ bird: other, dx, dy, dist });
+  }
+  return result;
+}
+
+/* Reynolds rule 1 — Separation: steer away from close neighbors */
+function separation(b, neighbors, radius) {
+  let ax=0, ay=0, n=0;
+  for (const { dx, dy, dist } of neighbors) {
+    if (dist < radius) {
+      /* Weight inversely by distance — closer = stronger repulsion */
+      ax -= (dx/dist) * (radius-dist)/radius;
+      ay -= (dy/dist) * (radius-dist)/radius;
+      n++;
+    }
+  }
+  return n ? [ax/n, ay/n] : [0,0];
+}
+
+/* Reynolds rule 2 — Alignment: match average heading of neighbors */
+function alignment(b, neighbors) {
+  let avgVx=0, avgVy=0, n=neighbors.length;
+  if (!n) return [0,0];
+  for (const { bird } of neighbors) { avgVx+=bird.vx; avgVy+=bird.vy; }
+  return [(avgVx/n)-b.vx, (avgVy/n)-b.vy];
+}
+
+/* Reynolds rule 3 — Cohesion: steer toward centroid of neighbors */
+function cohesion(b, neighbors) {
+  let cx=0, cy=0, n=neighbors.length;
+  if (!n) return [0,0];
+  for (const { bird } of neighbors) { cx+=bird.x; cy+=bird.y; }
+  return [(cx/n)-b.x, (cy/n)-b.y];
+}
+
+function clamp(vx, vy, max) {
+  const l = Math.sqrt(vx*vx+vy*vy);
+  return l > max ? [vx*max/l, vy*max/l] : [vx, vy];
+}
+
+/* ── Bird factory ── */
+
+/* Large zone threshold — birds above this z are considered "big" */
+const Z_LARGE = Z_FAR + (Z_NEAR - Z_FAR) * 0.7;
+
+function countLargeBirds() {
+  return birds.filter(b => !b.dead && b.z > Z_LARGE).length;
+}
+
+function makeBird(x, y, angle, speed, mode, isChaosSpawn=false) {
+  const tooMany = countLargeBirds() >= 1;
+  const r = Math.pow(Math.random(), isChaosSpawn ? 0.5 : 2.5);
+  const startZ = isChaosSpawn
+    ? Z_FAR + r * (Z_NEAR - Z_FAR) * 0.35   /* chaos — mostly small-medium */
+    : tooMany
+      ? Z_FAR + r * (Z_NEAR - Z_FAR) * 0.25
+      : Z_FAR + r * (Z_NEAR - Z_FAR) * 0.5;
+
+  return {
+    x, y,
+    z:    startZ,
+    zVel: 0,   /* z is fixed at spawn — no growth during flight */
+    angle,
+    spawnAngle: angle,
+    vx: Math.cos(angle)*speed,
+    vy: Math.sin(angle)*speed,
+    speed, mode,
+    frameOffset:  Math.floor(Math.random()*FRAME_COUNT),
+    arcTarget:    { x: W*(0.2+Math.random()*0.6), y: H*(0.15+Math.random()*0.65) },
+    arcReturned:  false,
+    turnCooldown: Math.floor(Math.random()*30+10),
+    spawnDelay:   0,
+    alpha:        1,
+    dead:         false,
+  };
+}
+
+function spawnCalmBird() {
+  const fromLeft = Math.random() > 0.35;
+  const x     = fromLeft ? -BIRD_SIZE_BASE : W+BIRD_SIZE_BASE;
+  /* Tighter middle band — 38% to 62% of H */
+  const y     = H*(0.38+Math.random()*0.24);
+  const angle = (fromLeft ? 0 : Math.PI) + (Math.random()-0.5)*0.35;
+  return makeBird(x, y, angle, CALM_SPEED, Math.random()<0.6 ? MODE_CROSS : MODE_LOOP);
+}
+
+function spawnChaosBird(extreme=false) {
+  const edge = Math.floor(Math.random()*4);
+  let x, y, angle;
+  /* MAX 45° from horizontal — no vertical flight ever.
+     Left/right edges: ±45° spread. Top/bottom: enter diagonally not vertically. */
+  const maxA = Math.PI * 0.25; /* 45 degrees */
+  if      (edge===0){ x=-BIRD_SIZE_BASE;                  y=H*(0.15+Math.random()*0.7); angle=(Math.random()-0.5)*maxA*2; }
+  else if (edge===1){ x=W+BIRD_SIZE_BASE;                  y=H*(0.15+Math.random()*0.7); angle=Math.PI+(Math.random()-0.5)*maxA*2; }
+  else if (edge===2){ x=W*(0.05+Math.random()*0.9);        y=-BIRD_SIZE_BASE;            angle=(Math.random()<0.5?-1:1)*(Math.PI*0.15+Math.random()*maxA); }
+  else              { x=W*(0.05+Math.random()*0.9);        y=H+BIRD_SIZE_BASE;           angle=(Math.random()<0.5?1:-1)*(Math.PI-Math.PI*0.15-Math.random()*maxA); }
+  const speed = extreme
+    ? CHAOS_SPEED*(1.0+Math.random()*0.6)
+    : CHAOS_SPEED*(0.65+Math.random()*0.5);
+  return makeBird(x, y, angle, speed, MODE_CHAOS, true);
+}
+
+function seedCalmFlock() {
+  for (let i=0; i<8; i++) {
+    const b = spawnCalmBird();
+    b.x     = W*(0.05+i*0.13)+(Math.random()-0.5)*60;
+    b.y     = H*(0.38+Math.random()*0.24);
+    b.alpha = 1;
+    birds.push(b);
+  }
+}
+
+/* ── Per-bird update ──
+   Base movement is from v5 (proven to work).
+   Reynolds boids steering is ADDED on top as an extra force
+   that nudges velocity — it doesn't replace the movement system. */
+function updateBird(b) {
+  b.alpha = 1;
+
+  /* z is fixed at spawn — size never changes during flight */
+  const depthSpeed = b.speed * (0.6+(b.z/Z_NEAR)*0.7);
+
+  /* Once a bird enters the large zone it switches to straight crossing —
+     no more arcing or looping, just a clean pass through the frame */
+  if (b.mode === MODE_LOOP && b.z > Z_LARGE) {
+    b.mode = MODE_CROSS;
+  }
+
+  /* ── Reynolds neighborhood ── */
+  const neighbors = getNeighbors(b);
+
+  if (b.mode === MODE_CROSS || b.mode === MODE_LOOP) {
+    b.vx += (Math.random()-0.5)*0.012;
+    b.vy += (Math.random()-0.5)*0.004;
+
+    /* Soft vertical boundary — nudge back toward middle third if drifting out */
+    const midY   = H * 0.5;
+    const bandH  = H * 0.18;  /* half-width of allowed band */
+    const distY  = b.y - midY;
+    if (Math.abs(distY) > bandH) {
+      b.vy -= distY * 0.003;  /* gentle pull back to center band */
+    }
+
+    /* Separation only — no cohesion/alignment */
+    if (neighbors.length > 0) {
+      const [sx,sy] = separation(b, neighbors, CALM_SEP_R);
+      const [rx,ry] = clamp(sx*CALM_SEP_W, sy*CALM_SEP_W, CALM_MAX_F);
+      b.vx += rx; b.vy += ry;
+    }
+
+    /* Clamp direction — calm birds never turn more than 90° from spawn angle.
+       This prevents any circling — bird always moves in its general entry direction. */
+    if (b.mode !== MODE_CHAOS) {
+      const currentAngle = Math.atan2(b.vy, b.vx);
+      let drift = currentAngle - b.spawnAngle;
+      while (drift >  Math.PI) drift -= 2*Math.PI;
+      while (drift < -Math.PI) drift += 2*Math.PI;
+      if (Math.abs(drift) > Math.PI/2) {
+        /* Steer back toward spawn angle */
+        const clampedAngle = b.spawnAngle + Math.sign(drift) * Math.PI/2;
+        const sp2 = Math.sqrt(b.vx*b.vx+b.vy*b.vy)+0.001;
+        b.vx = Math.cos(clampedAngle) * sp2;
+        b.vy = Math.sin(clampedAngle) * sp2;
+      }
+    }
+
+    /* Speed limit */
+    const sp = Math.sqrt(b.vx*b.vx+b.vy*b.vy)+0.001;
+    b.vx = (b.vx/sp)*depthSpeed; b.vy = (b.vy/sp)*depthSpeed;
+
+  } else if (b.mode === MODE_CHAOS) {
+    /* Chaos base movement */
+    b.turnCooldown--;
+    if (b.turnCooldown <= 0) {
+      const ta=(Math.random()-0.5)*Math.PI*0.75;
+      const cos=Math.cos(ta), sin=Math.sin(ta);
+      const nvx=b.vx*cos-b.vy*sin, nvy=b.vx*sin+b.vy*cos;
+      b.vx=nvx; b.vy=nvy;
+      b.turnCooldown = Math.floor(Math.random()*60+30);
+    }
+    b.vx += (Math.random()-0.5)*0.12;
+    b.vy += (Math.random()-0.5)*0.12;
+
+    /* Reynolds chaos — separation extreme, alignment inverted */
+    if (neighbors.length > 0) {
+      const [sx,sy] = separation(b, neighbors, CHAOS_SEP_R);
+      const [ax,ay] = alignment(b, neighbors);
+      const [cx,cy] = cohesion(b, neighbors);
+      let rx = sx*CHAOS_SEP_W + ax*CHAOS_ALI_W + cx*CHAOS_COH_W;
+      let ry = sy*CHAOS_SEP_W + ay*CHAOS_ALI_W + cy*CHAOS_COH_W;
+      [rx, ry] = clamp(rx, ry, CHAOS_MAX_F);
+      b.vx += rx; b.vy += ry;
+      /* Extra z turbulence during chaos */
+      b.zVel += (Math.random()-0.5)*0.0006;
+    }
+
+    const sp = Math.sqrt(b.vx*b.vx+b.vy*b.vy)+0.001;
+    /* Minimum speed floor — if nearly stopped, restore full speed in current direction
+       This prevents rotation-in-place when forces cancel each other out */
+    const minSpeed = depthSpeed * 0.4;
+    const finalSpeed = Math.max(sp, minSpeed);
+    b.vx = (b.vx/sp)*finalSpeed; b.vy = (b.vy/sp)*finalSpeed;
+  }
+
+  /* Body rotation with inertia — only updates when bird is actually moving.
+     Prevents spinning-in-place when velocity is near zero. */
+  const spd = Math.sqrt(b.vx*b.vx + b.vy*b.vy);
+  if (spd > 0.3) {
+    const targetAngle = Math.atan2(b.vy, b.vx);
+    let da = targetAngle - b.angle;
+    while (da >  Math.PI) da -= 2*Math.PI;
+    while (da < -Math.PI) da += 2*Math.PI;
+    /* Bigger birds turn more slowly — size factor reduces rate for large birds */
+    const t = (b.z - Z_FAR) / (Z_NEAR - Z_FAR);
+    const sizeScale = 1 - t * 0.8;  /* 1.0 when far/small, 0.2 when near/large */
+    const rate = (b.mode===MODE_CHAOS ? 0.004 : 0.002) * sizeScale;
+    b.angleVel = (b.angleVel||0) * 0.94 + da * rate;
+    b.angleVel = Math.max(-0.012, Math.min(0.012, b.angleVel));
+    b.angle += b.angleVel;
+  }
+
+  b.x += b.vx;
+  b.y += b.vy;
+
+  const m = 180;
+  if (b.x<-m||b.x>W+m||b.y<-m||b.y>H+m) b.dead=true;
+}
+
+/* ── Per-bird draw ── */
+function drawBirdTo(dc, b) {
+  const drawSize = zToSize(b.z);
+  const t = (b.z - Z_FAR) / (Z_NEAR - Z_FAR); /* 0=far, 1=near */
+
+  /* Depth of field — far=blurry+dark, near=sharp+bright */
+  const brightness = (0.4 + t * 0.85).toFixed(2);
+
+  dc.save();
+  dc.translate(b.x, b.y);
+  dc.rotate(b.angle);
+  dc.globalAlpha = zToAlpha(b.z);
+  dc.filter = `brightness(${brightness})`;
+
+  if (framesReady) {
+    const img = frames[(frameIndex+b.frameOffset)%FRAME_COUNT];
+    if (img) dc.drawImage(img, -drawSize/2, -drawSize/2, drawSize, drawSize);
+  } else {
+    const s=drawSize*0.35, wing=Math.sin(frameIndex*0.25+b.frameOffset)*0.55;
+    dc.fillStyle='rgba(255,215,120,1)';
+    dc.beginPath(); dc.moveTo(s*0.3,0);
+    dc.quadraticCurveTo(s*0.1,-s*(0.9+wing),-s*1.1,-s*(0.55+wing*0.45));
+    dc.quadraticCurveTo(-s*0.5,-s*0.2,s*0.35,0); dc.fill();
+    dc.beginPath(); dc.moveTo(s*0.3,0);
+    dc.quadraticCurveTo(s*0.1,s*(0.9+wing),-s*1.1,s*(0.55+wing*0.45));
+    dc.quadraticCurveTo(-s*0.5,s*0.2,s*0.35,0); dc.fill();
+  }
+  dc.filter = 'none';
+  dc.globalAlpha = 1;
+  dc.restore();
+}
+
+/* ── Chaos transitions ── */
+const CHAOS_MEDIUM_THRESHOLD  = 0.4;
+const CHAOS_EXTREME_THRESHOLD = 0.7;
+
+function convertToChaos(extreme=false) {
+  for (const b of birds) {
+    b.mode = MODE_CHAOS;
+    /* Keep current velocity direction AND current z/size — no snapping.
+       Only blend speed up gradually. */
+    const targetSpeed = (extreme ? CHAOS_SPEED*1.2 : CHAOS_SPEED) * (0.6+Math.random()*0.5);
+    const currentSpd  = Math.sqrt(b.vx*b.vx+b.vy*b.vy)+0.001;
+    const newSpeed    = currentSpd + (targetSpeed-currentSpd)*0.3;
+    b.vx = (b.vx/currentSpd)*newSpeed;
+    b.vy = (b.vy/currentSpd)*newSpeed;
+    b.speed = targetSpeed;
+    /* z stays exactly where it is — no size jump */
+    b.zVel = 0;  /* freeze z so chaos birds don't grow/shrink */
+    b.turnCooldown = Math.floor(Math.random()*20+10);
+  }
+}
+
+function floodChaosBirds(extreme=false) {
+  const target   = extreme ? 40 : 30;  /* 2× previous 20/15 */
+  const needed   = target - birds.filter(b=>!b.dead).length;
+  const perEdge  = Math.ceil(Math.max(needed,0) / 4);
+  const baseDelay = extreme ? 6 : 12;
+  for (let edge=0; edge<4; edge++) {
+    for (let i=0; i<perEdge; i++) {
+      const b = spawnChaosBird(extreme);
+      b.spawnDelay = edge*baseDelay + i*4;
+      birds.push(b);
+    }
+  }
+}
+
+function spawnExtremeBatch() {
+  const active = birds.filter(b=>!b.dead).length;
+  const deficit = 60 - active;  /* 2× previous 30 target */
+  const toSpawn = Math.max(0, Math.min(deficit, 8)); /* 2× previous 4 at a time */
+  for (let i=0; i<toSpawn; i++) {
+    const b = spawnChaosBird(true);
+    b.spawnDelay = i * 3;
+    birds.push(b);
+  }
+}
+
+/* ── Mic ── */
+function getMicLevel() {
+  if (!analyser||!freqData) return 0;
+  analyser.getByteFrequencyData(freqData);
+  let sum=0; for(const v of freqData) sum+=v;
+  return Math.min(1,(sum/freqData.length)/55);
+}
+
+/* ── Main loop ── */
+
+/* Safe init — resize first, then init corners */
+resize();
+corners = loadSavedCorners() || defaultCorners();
+
+seedCalmFlock();
+
+function loop() {
+  requestAnimationFrame(loop);
+  tick++;
+
+  if (micActive)     targetNoise = getMicLevel();
+  else if (simNoise) targetNoise = Math.min(1, targetNoise+0.018);
+  else               { targetNoise*=0.35; if(targetNoise<0.005) targetNoise=0; }
+  noiseLevel += (targetNoise-noiseLevel)*0.12;
+
+  const isMediumChaos  = noiseLevel > CHAOS_MEDIUM_THRESHOLD;
+  const isExtremeChaos = noiseLevel > CHAOS_EXTREME_THRESHOLD;
+  const isChaos = isMediumChaos;
+
+  /* Enter medium chaos */
+  if (isMediumChaos && !prevChaosState) {
+    convertToChaos(false);
+    if (!chaosBirdsInjected){ floodChaosBirds(false); chaosBirdsInjected=true; }
+  }
+  /* Escalate to extreme chaos */
+  if (isExtremeChaos && !prevExtremeState) {
+    convertToChaos(true);
+    floodChaosBirds(true);
+  }
+  /* Return to calm */
+  if (!isMediumChaos && prevChaosState) {
+    chaosBirdsInjected=false;
+    for (const b of birds) {
+      if (b.mode===MODE_CHAOS) {
+        b.mode  = MODE_CROSS;
+        /* Blend speed back down gradually — no snap */
+        b.speed = CALM_SPEED*(0.8+Math.random()*0.4);
+        const sp = Math.sqrt(b.vx*b.vx+b.vy*b.vy)+0.001;
+        b.vx = (b.vx/sp)*b.speed;
+        b.vy = (b.vy/sp)*b.speed;
+      }
+    }
+    for (let i=0; i<3; i++) birds.push(spawnCalmBird());
+  }
+  prevChaosState   = isMediumChaos;
+  prevExtremeState = isExtremeChaos;
+
+  /* Continuous chaos respawn — both levels, every 15 ticks.
+     Target keeps screen populated as birds exit. */
+  if (isMediumChaos && tick % 15 === 0) {
+    const target = isExtremeChaos ? 70 : 40;
+    const active = birds.filter(b=>!b.dead).length;
+    const deficit = target - active;
+    const toSpawn = Math.max(0, Math.min(deficit, isExtremeChaos ? 10 : 6));
+    for (let i=0; i<toSpawn; i++) {
+      const b = spawnChaosBird(isExtremeChaos);
+      b.spawnDelay = i * 3;
+      birds.push(b);
+    }
+  }
+
+  if (!isChaos && tick%CALM_SPAWN_TICKS===0) {
+    if (birds.filter(b=>!b.dead).length < CALM_MAX_BIRDS) birds.push(spawnCalmBird());
+  }
+
+  const targetFS=isChaos?CHAOS_FRAME_SPEED:CALM_FRAME_SPEED;
+  currentFrameSpeed += (targetFS-currentFrameSpeed)*0.04;
+  frameTick++;
+  if (frameTick>=Math.round(currentFrameSpeed)){ frameTick=0; frameIndex=(frameIndex+1)%FRAME_COUNT; }
+
+  /* Draw birds to offscreen canvas */
+  const isDefault = corners[0].x===0&&corners[0].y===0&&corners[1].x===W&&corners[1].y===0&&corners[2].x===W&&corners[2].y===H&&corners[3].x===0&&corners[3].y===H;
+  const drawCtx = isDefault ? ctx : offCtx;  /* draw directly if no warp needed */
+
+  drawCtx.fillStyle=`rgba(0,0,0,${isChaos?0.28:0.13})`;
+  drawCtx.fillRect(0,0,W,H);
+  /* Update all birds first */
+  for (let i=0; i<birds.length; i++) {
+    const b=birds[i];
+    if (b.spawnDelay>0){ b.spawnDelay--; continue; }
+    updateBird(b);
+  }
+  /* Remove dead birds */
+  for (let i=birds.length-1; i>=0; i--) {
+    if (birds[i].dead) birds.splice(i,1);
+  }
+  /* Sort by depth then draw — far/dark first, near/bright on top */
+  sortByDepth();
+  for (let i=0; i<birds.length; i++) {
+    if (!birds[i].dead) drawBirdTo(drawCtx, birds[i]);
+  }
+
+  /* Apply corner-pin warp if corners are not default */
+  applyWarp();
+
+  /* Mapping handles */
+  if (mappingMode) drawHandles();
+
+  /* UI */
+  noiseBar.style.width=Math.round(noiseLevel*100)+'%';
+  if      (noiseLevel<0.15)           { stateLabel.textContent='Harmony'; stateLabel.style.color='rgba(255,220,140,0.75)'; }
+  else if (noiseLevel<CHAOS_THRESHOLD){ stateLabel.textContent='Drifting'; stateLabel.style.color='rgba(255,180,90,0.85)'; }
+  else                                { stateLabel.textContent='Chaos';    stateLabel.style.color='rgba(255,110,70,0.95)'; }
+}
+
+loop();
+
+/* ── Mic button ── */
+micBtn.addEventListener('click', async () => {
+  if (micActive) return;
+  try {
+    const stream=await navigator.mediaDevices.getUserMedia({audio:true,video:false});
+    const ac=new(window.AudioContext||window.webkitAudioContext)();
+    analyser=ac.createAnalyser(); analyser.fftSize=512;
+    freqData=new Uint8Array(analyser.frequencyBinCount);
+    ac.createMediaStreamSource(stream).connect(analyser);
+    micActive=true; micBtn.textContent='Mic active'; micBtn.classList.add('active');
+    document.getElementById('hint').textContent='Mic listening · M = mapping · Space = crowd noise';
+  } catch(e) { micBtn.textContent='Mic blocked — use Space bar'; }
+});
+
+/* ── Keyboard ── */
+window.addEventListener('keydown', e => {
+  if (e.code==='Space'){ e.preventDefault(); simNoise=true; }
+  if (e.code==='KeyM'){ mappingMode ? exitMapMode() : enterMapMode(); }
+  if (e.code==='KeyR' && mappingMode){ corners=defaultCorners(); saveCorners(); drawHandles(); }
+  if (e.code==='KeyH'){
+    const ui=document.getElementById('ui');
+    ui.style.display=ui.style.display==='flex'?'none':'flex';
+  }});
+window.addEventListener('keyup', e => { if(e.code==='Space') simNoise=false; });
+</script>
+</body>
+</html>
