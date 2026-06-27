@@ -1,193 +1,1052 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="description" content="Diamond Nguyen, a Multimedia Artist and Educator.">
-    <link rel="icon" href="img/icon.png" type="image/x-icon">
-    <title>Diamond Nguyen - Multimedia Artist and Educator</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="main.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Diamond Nguyen</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=Inter:wght@300;400;500&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #ffffff;
+  --text: #111111;
+  --text-muted: #888888;
+  --border: rgba(0,0,0,0.09);
+  --panel-bg: #f8f8f6;
+  --gap: 8px;
+  --font-display: 'IM Fell English', Georgia, serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0d0d0d;
+    --text: #efefef;
+    --text-muted: #666666;
+    --border: rgba(255,255,255,0.07);
+    --panel-bg: #141414;
+  }
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-weight: 300;
+  min-height: 100vh;
+}
+
+header { padding: 2.5rem 2rem 0; text-align: center; }
+
+.site-title {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  font-weight: 400;
+  letter-spacing: 0.01em;
+}
+
+nav {
+  display: flex;
+  justify-content: center;
+  padding: 1.25rem 2rem 1.5rem;
+  flex-wrap: wrap;
+}
+
+nav button {
+  background: none;
+  border: none;
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  text-transform: lowercase;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0.25rem 1rem;
+  position: relative;
+  transition: color 0.2s;
+}
+
+nav button:hover { color: var(--text); }
+nav button.active { color: var(--text); font-weight: 500; }
+nav button.active::after {
+  content: '';
+  position: absolute;
+  bottom: -2px; left: 1rem; right: 1rem;
+  height: 1px; background: var(--text);
+}
+
+/* ── Grid container ── */
+.grid-container {
+  padding: 0 1.5rem 5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+#panel-slot { width: 100%; }
+
+/* Masonry via 3 independent column containers.
+   JS distributes tiles round-robin (left-to-right reading order)
+   instead of relying on CSS columns' top-to-bottom fill behavior. */
+.masonry {
+  display: flex;
+  gap: var(--gap);
+  align-items: flex-start;
+}
+
+.masonry-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+  min-width: 0;
+}
+
+@media (max-width: 768px) {
+  .masonry-col:nth-child(3) { display: none; } /* show only 2 cols on tablet */
+}
+
+@media (max-width: 480px) {
+  .masonry-col:nth-child(2),
+  .masonry-col:nth-child(3) { display: none; } /* show only 1 col on mobile */
+}
+
+/* ── Project tile ── */
+.project-item {
+  cursor: pointer;
+  position: relative;
+  border-radius: 6px;
+  overflow: hidden;
+  display: block;
+  width: 100%;
+}
+
+.project-item.hidden { display: none; }
+
+.project-item img { width: 100%; display: block; border-radius: 6px; }
+
+.tile-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0);
+  transition: background 0.28s ease;
+  pointer-events: none;
+  border-radius: 6px;
+}
+
+.project-item:hover .tile-overlay { background: rgba(0,0,0,0.8); }
+
+.hover-label {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.28s ease;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.project-item:hover .hover-label { opacity: 1; }
+
+.hover-label span {
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: #fff;
+  letter-spacing: 0.1em;
+  text-transform: lowercase;
+  text-align: center;
+  padding: 0 1rem;
+}
+
+/* ── Expand panel ── */
+.expand-panel {
+  width: 100%;
+  background: var(--panel-bg);
+  border-radius: 10px;
+  border: 0.5px solid var(--border);
+  overflow: hidden;
+  margin-bottom: var(--gap);
+  grid-template-columns: 36% 1fr 26%;
+  align-items: start;
+  display: grid;
+  max-height: 0;
+  opacity: 0;
+  transition: max-height 0.45s cubic-bezier(0.4,0,0.2,1), opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.expand-panel.open {
+  max-height: 2000px;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ── Panel left ── */
+.panel-left-col {
+  display: flex;
+  flex-direction: column;
+  padding: 1.75rem 0 1.75rem 2rem;
+  gap: 0.75rem;
+  align-self: start;
+}
+
+.panel-close {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-muted);
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  padding: 0;
+  transition: color 0.2s;
+  align-self: flex-start;
+}
+
+.panel-close:hover { color: var(--text); }
+
+.panel-close svg {
+  width: 13px; height: 13px;
+  stroke: currentColor; fill: none;
+  stroke-width: 1.5; stroke-linecap: round;
+}
+
+.panel-main-img {
+  width: 100%;
+  border-radius: 6px;
+  display: block;
+  object-fit: cover;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.panel-main-img:hover { opacity: 0.92; }
+
+/* ── Panel middle ── */
+.panel-description-col {
+  padding: 1.75rem 2rem;
+  min-width: 0;
+  border-left: 0.5px solid var(--border);
+  border-right: 0.5px solid var(--border);
+  align-self: stretch;
+}
+
+.panel-collaborators {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  letter-spacing: 0.03em;
+  margin-bottom: 0.3rem;
+  margin-top: 2rem;
+}
+
+.panel-title {
+  font-family: var(--font-display);
+  font-size: 1.65rem;
+  font-weight: 400;
+  line-height: 1.15;
+  margin-bottom: 0.35rem;
+  color: var(--text);
+}
+
+.panel-category {
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 0.5rem;
+}
+
+.panel-exhibited {
+  font-size: 0.74rem;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-bottom: 1.3rem;
+  white-space: pre-line;
+  line-height: 1.6;
+}
+
+.panel-description {
+  font-size: 0.78rem;
+  line-height: 1.85;
+  color: var(--text);
+  opacity: 0.8;
+  white-space: pre-line;
+}
+
+.panel-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 1.5rem;
+  padding: 0.55rem 1.1rem;
+  border: 0.5px solid var(--text);
+  border-radius: 3px;
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: lowercase;
+  color: var(--text);
+  text-decoration: none;
+  transition: background 0.2s, color 0.2s;
+}
+
+.panel-link:hover { background: var(--text); color: var(--bg); }
+
+.panel-link svg {
+  width: 11px; height: 11px;
+  stroke: currentColor; fill: none;
+  stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round;
+}
+
+/* ── Panel right ── */
+.panel-gallery-col {
+  padding: 1.75rem 2rem 1.75rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-self: start;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.panel-video-thumb {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16/9;
+  border-radius: 6px;
+  overflow: hidden;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.panel-video-thumb iframe {
+  width: 100%; height: 100%;
+  display: block;
+  border: none;
+  pointer-events: none; /* clicks pass through to the shield/parent */
+}
+
+.thumb-click-shield {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: transparent;
+}
+
+.panel-video-thumb .play-btn {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.3);
+  transition: background 0.2s;
+  pointer-events: none; /* let clicks fall through to the shield below */
+}
+
+.panel-video-thumb:hover .play-btn { background: rgba(0,0,0,0.5); }
+
+.play-btn svg {
+  width: 48px; height: 48px;
+  fill: white;
+  filter: drop-shadow(0 2px 8px rgba(0,0,0,0.4));
+}
+
+.panel-gallery-label {
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 2px;
+}
+
+.panel-gallery {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5px;
+}
+
+.panel-gallery img {
+  width: 100%;
+  aspect-ratio: 1/1;
+  object-fit: cover;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: opacity 0.2s;
+  display: block;
+}
+
+.panel-gallery img:hover { opacity: 0.75; }
+
+/* ── Lightbox ── */
+#lightbox {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.92);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.22s ease;
+}
+
+#lightbox-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#lightbox.open { display: flex; }
+#lightbox.visible { opacity: 1; }
+
+#lightbox-close {
+  position: fixed;
+  top: 1.5rem; left: 1.5rem;
+  background: none; border: none;
+  cursor: pointer;
+  color: rgba(255,255,255,0.75);
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  display: flex; align-items: center; gap: 0.4rem;
+  z-index: 1001;
+  transition: color 0.2s;
+  padding: 0;
+}
+
+#lightbox-close:hover { color: #fff; }
+
+#lightbox-close svg {
+  width: 14px; height: 14px;
+  stroke: currentColor; fill: none;
+  stroke-width: 1.5; stroke-linecap: round;
+}
+
+#lightbox-img {
+  max-width: 88vw; max-height: 88vh;
+  object-fit: contain; border-radius: 4px;
+  display: none; position: relative;
+  z-index: 1001; pointer-events: none;
+}
+
+#lightbox-video {
+  display: none;
+  position: relative; z-index: 1001;
+  width: min(860px, 88vw);
+  aspect-ratio: 16/9;
+  border-radius: 8px;
+  border: none;
+}
+
+#lightbox-caption {
+  display: none;
+  position: relative;
+  z-index: 1001;
+  margin-top: 1rem;
+  color: rgba(255,255,255,0.75);
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  text-align: center;
+  max-width: 80vw;
+}
+
+#lightbox.img-mode #lightbox-caption.has-caption,
+#lightbox.video-mode #lightbox-caption.has-caption { display: block; }
+
+#lightbox.img-mode #lightbox-img { display: block; }
+#lightbox.video-mode #lightbox-video { display: block; }
+
+/* ── About modal ── */
+/* About panel reuses the same visual language as a project panel:
+   light background, no dark backdrop, lives inline in #panel-slot. */
+#about-modal {
+  width: 100%;
+  background: var(--panel-bg);
+  border-radius: 10px;
+  border: 0.5px solid var(--border);
+  overflow: hidden;
+  margin-bottom: var(--gap);
+  display: none;
+  grid-template-columns: 38% 1fr;
+  max-height: 0;
+  opacity: 0;
+  transition: max-height 0.45s cubic-bezier(0.4,0,0.2,1), opacity 0.3s ease;
+}
+
+#about-modal.open {
+  display: grid;
+  max-height: 2000px;
+  opacity: 1;
+}
+
+/* Matches .panel-close exactly — same position, same style */
+#about-close {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-muted);
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  padding: 0;
+  transition: color 0.2s;
+  position: absolute;
+  top: 1.75rem;
+  left: 1.75rem;
+}
+
+#about-close:hover { color: var(--text); }
+
+#about-close svg {
+  width: 13px; height: 13px;
+  stroke: currentColor; fill: none;
+  stroke-width: 1.5; stroke-linecap: round;
+}
+
+.about-image-col {
+  padding: 1.75rem 0 1.75rem 2rem;
+  align-self: start;
+}
+
+.about-image-col img {
+  width: 100%;
+  border-radius: 6px;
+  display: block;
+  object-fit: cover;
+}
+
+.about-text-col {
+  padding: 1.75rem 2rem;
+  min-width: 0;
+  position: relative;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+#about-modal h2 {
+  font-family: var(--font-display);
+  font-size: 1.65rem;
+  font-weight: 400;
+  line-height: 1.15;
+  margin-top: 2rem;
+  margin-bottom: 0.35rem;
+  color: var(--text);
+}
+
+#about-modal .about-role {
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 1.3rem;
+}
+
+#about-modal p {
+  font-size: 0.78rem;
+  line-height: 1.85;
+  color: var(--text);
+  opacity: 0.8;
+  margin-bottom: 1.2rem;
+}
+
+#about-modal .about-links {
+  display: flex;
+  gap: 1.25rem;
+  margin-top: 1.5rem;
+}
+
+#about-modal .about-links a {
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  text-decoration: none;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 2px;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+#about-modal .about-links a:hover {
+  color: var(--text);
+  border-color: var(--text);
+}
+
+#about-modal .about-link-text {
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+}
+
+@media (max-width: 768px) {
+  #about-modal.open { grid-template-columns: 1fr; }
+  .about-image-col { padding: 1.5rem 1.5rem 0; }
+  .about-text-col { padding: 1.25rem 1.5rem 1.5rem; max-height: none; }
+}
+
+@media (max-width: 768px) {
+  .expand-panel { grid-template-columns: 1fr; }
+  .panel-left-col { padding: 1.5rem 1.5rem 0; }
+  .panel-description-col {
+    padding: 1.25rem 1.5rem;
+    border-left: none; border-right: none;
+    border-top: 0.5px solid var(--border);
+    border-bottom: 0.5px solid var(--border);
+  }
+  .panel-collaborators { margin-top: 0; }
+  .panel-gallery-col { padding: 1.25rem 1.5rem 1.5rem; max-height: none; }
+  .panel-gallery { grid-template-columns: repeat(3,1fr); }
+}
+
+/* ── Footer ── */
+footer {
+  text-align: center;
+  padding: 2rem 1.5rem 3rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+}
+</style>
 </head>
 <body>
-    <button id="back-to-top-button" style="display: none;">↑</button>
-    <header>
-        <nav>
-            <div class="left-nav">
-                <ul>
-                    <li class="about-link"><a href="about.html">About</a></li>
-                </ul>
-            </div>
-            <div class="center-nav">
-                <a href="index.html" class="nav-brand">DIAMOND NGUYEN</a>
-            </div>
-            <div class="right-nav">
-                <ul>
-                    <li class="dropdown">
-                        <a href="#teach">teach</a>
-                        <div class="dropdown-content">
-                            <a href="DigitalNarrative.html">Digital Narrative</a>
-                            <a href="2dAnimation.html">2D Animation</a>
-                            <a href="3dAnimation.html">3D Animation</a>
-                            <a href="VJEvents.html">VJ Events</a>
-                        </div>
-                    </li>
-                    <li class="dropdown">
-                        <a href="#design">design</a>
-                        <div class="dropdown-content">
-                            <a href="videoTemplates.html">Video Templates</a>
-                            <a href="AIActors.html">AI Actors</a>
-                        </div>
-                    </li>
-                    <li class="dropdown">
-                        <a href="#animate">animate</a>
-                        <div class="dropdown-content">
-                            <a href="FantasticFables.html">Fantastic Fables</a>
-                            <a href="BNDC.html">BNDC</a>
-                            <a href="Mindblown.html">Mindblown</a>
-                            <a href="ManMade.html">ManMade</a>
-                        </div>
-                    </li>
-                    <li class="dropdown">
-                        <a href="#interact">interact</a>
-                        <div class="dropdown-content">
-                            <a href="Skyportal.html">Skyportal</a>
-                            <a href="OUE.html">OUE</a>
-                            <a href="LivingSpace.html">LivingSpace</a>
-                            <a href="Astar.html">A*star</a>
-                            <a href="lostbirds.html">Lost Birds</a>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-        </nav>
-        <div class="header-content">
-            <h2>Multimedia Artist and Educator</h2>
-        </div>
-    </header>
-  
-  <main>
-    <div class="gallery-container">
-      <div class="gallery-grid">
-        <div class="gallery-item square">
-          <a href="DigitalNarrative.html"> 
-            <img src="gif/narrative.gif" alt="Digital Narrative">
-            <div class="item-overlay">
-              <div class="item-text">Teach Digital Narrative</div>
-            </div>
-            </a>
-        </div>
-        <div class="gallery-item square">
-          <a href="2dAnimation.html">
-            <img src="gif/2D.gif" alt="2D Animation">
-            <div class="item-overlay">
-              <div class="item-text">Teach 2D Animation</div>
-            </div>
-          </a>
-        </div>
-        <div class="gallery-item portrait-rectangle">
-          <a href="videoTemplates.html">
-            <img src="gif/Templates.gif" alt="Video Templates">
-            <div class="item-overlay">
-              <div class="item-text">Design Video Templates</div>
-            </div>
-            </a>
-        </div>
-        <div class="gallery-item portrait-rectangle">
-          <a href="AIActors.html">
-            <img src="gif/AI-actors.gif" alt="AI Actor">
-            <div class="item-overlay">
-              <div class="item-text">Enhance AI Actors</div>
-            </div>
-            </a>
-        </div>
-        <div class="gallery-item square">
-          <a href="VJEvents.html"">
-            <img src="gif/VJ.gif" alt="VJ Live Performance">
-            <div class="item-overlay">
-              <div class="item-text">Teach VJ Events</div>
-            </div>
-            </a>
-        </div>
-        <div class="gallery-item square">
-          <a href="3dAnimation.html">
-            <img src="gif/3D.gif" alt="3D Animation">
-            <div class="item-overlay">
-              <div class="item-text">Teach 3D Animation</div>
-            </div>
-            </a>
-        </div>
-        <div class="gallery-item square">
-          <a href="FantasticFables.html">
-            <img src="gif/redhill.gif" alt="Fantastic Fable">
-            <div class="item-overlay">
-              <div class="item-text">Animate Fantastic Fables</div>
-            </div>
-            </a>
-        </div>
-        <div class="gallery-item square">
-          <a href="BNDC.html">
-            <img src="gif/vskh.gif" alt="Binh Ngo Dai Chien">
-            <div class="item-overlay">
-              <div class="item-text">Animate Binh Ngo Dai Chien</div>
-            </div>
-            </a>
-        </div>
-        <div class="gallery-item square">
-          <a href="Skyportal.html">
-            <img src="gif/skyportal.gif" alt="Sky Portal">
-            <div class="item-overlay">
-              <div class="item-text">Interact with Sky Portal</div>
-            </div>
-            </a>
-        </div>
-        <div class="gallery-item square">
-          <a href="OUE.html">
-            <img src="gif/oue.gif" alt="OUE">
-            <div class="item-overlay">
-              <div class="item-text">Interact with OUE</div>
-            </div>
-            </a>
-        </div>
-        <div class="gallery-item square">
-          <a href="Mindblown.html">
-            <img src="gif/mindblown.gif" alt="Mindblown">
-            <div class="item-overlay">
-              <div class="item-text">Animate Mindblown</div>
-            </div>
-            </a>
-        </div>
-        <div class="gallery-item square">
-          <a href="ManMade.html">
-            <img src="gif/manmade.gif" alt="Manmade">
-            <div class="item-overlay">
-              <div class="item-text">Animate ManMade</div>
-            </div>  
-            </a>
-        </div>
-        <div class="gallery-item square">
-          <a href="LivingSpace.html">
-            <img src="gif/livingspace.gif" alt="Living Space">
-            <div class="item-overlay">
-              <div class="item-text">Interact with Living Space</div>
-            </div>
-            </a>
-        </div>
-        <div class="gallery-item square">
-          <a href="Astar.html">
-            <img src="gif/astar.gif" alt="A*star">
-            <div class="item-overlay">
-              <div class="item-text">Interact with A*star</div>
-            </div>
-            </a>
-        </div>
-      </div>
-    </div>
-  </main>
 
-<footer>
-    &copy; 2023 Diamond Nguyen
-</footer>
+<header>
+  <h1 class="site-title">Diamond Nguyen</h1>
+</header>
 
-<script src="main.js"></script>
+<nav id="nav">
+  <button class="active" data-cat="all">all</button>
+  <button data-cat="interact">interact</button>
+  <button data-cat="animate">animate</button>
+  <button data-cat="paint">paint</button>
+
+  <button data-cat="teach">teach</button>
+  <!-- <button data-cat="read">read</button> -->
+  <!-- <button data-cat="write">write</button> -->
+  <button id="about-btn" type="button">about</button>
+</nav>
+
+<div class="grid-container">
+  <div id="panel-slot"></div>
+  <div class="masonry" id="masonry"></div>
+</div>
+
+<footer>&copy; 2026 Diamond Nguyen</footer>
+
+<div id="lightbox" role="dialog" aria-modal="true">
+  <button id="lightbox-close">
+    <svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    close
+  </button>
+  <div id="lightbox-content">
+    <img id="lightbox-img" src="" alt="">
+    <iframe id="lightbox-video" src="" title="Video"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowfullscreen></iframe>
+    <p id="lightbox-caption"></p>
+  </div>
+</div>
+
+<div id="about-modal"><!-- built dynamically from window.ABOUT in projects.js, lives in #panel-slot when open --></div>
+
+<script src="projects.js"></script>
+<script>
+(function () {
+  var masonry       = document.getElementById('masonry');
+  var lightbox      = document.getElementById('lightbox');
+  var lightboxImg   = document.getElementById('lightbox-img');
+  var lightboxVideo = document.getElementById('lightbox-video');
+  var lightboxClose   = document.getElementById('lightbox-close');
+  var lightboxCaption = document.getElementById('lightbox-caption');
+
+
+  var panels   = {};
+  var tileEls  = {};
+  var activeId = null;
+  var aboutModalEl = null; /* set once buildAboutModal runs */
+
+  var currentFilteredProjects = null;
+
+  function init() {
+    if (!window.PROJECTS || !window.PROJECTS.length) return;
+    currentFilteredProjects = window.PROJECTS;
+    buildGrid(currentFilteredProjects);
+    bindNav();
+    bindDelegatedClicks();
+    bindLightbox();
+    bindAbout();
+    bindResize();
+  }
+
+  /* Rebuild grid on resize so column count stays correct across breakpoints */
+  function bindResize() {
+    var resizeTimer = null;
+    var lastNumCols = getNumCols();
+    window.addEventListener('resize', function () {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(function () {
+        var nowCols = getNumCols();
+        if (nowCols !== lastNumCols) {
+          lastNumCols = nowCols;
+          if (activeId) closePanel(activeId, true);
+          buildGrid(currentFilteredProjects);
+        }
+      }, 150);
+    });
+  }
+
+  function getNumCols() {
+    if (window.innerWidth <= 480) return 1;
+    if (window.innerWidth <= 768) return 2;
+    return 3;
+  }
+
+  function buildGrid(projects) {
+    masonry.innerHTML = '';
+    panels  = {};
+    tileEls = {};
+    activeId = null;
+
+    /* Determine number of columns based on viewport, matching CSS breakpoints */
+    var numCols = getNumCols();
+
+    /* Create column containers */
+    var cols = [];
+    for (var c = 0; c < numCols; c++) {
+      var colDiv = document.createElement('div');
+      colDiv.className = 'masonry-col';
+      masonry.appendChild(colDiv);
+      cols.push(colDiv);
+    }
+
+    /* Distribute tiles round-robin: position 0 -> col 0, position 1 -> col 1,
+       position 2 -> col 2, position 3 -> col 0, etc. This reads left-to-right,
+       top-to-bottom, while each column still stacks independently (true masonry,
+       no awkward row gaps from mismatched image heights). */
+    projects.forEach(function (data, i) {
+      var tile = buildTile(data);
+      tileEls[data.slug] = tile;
+      panels[data.slug]  = buildPanel(data);
+      cols[i % numCols].appendChild(tile);
+    });
+  }
+
+  function buildTile(data) {
+    var slug    = data.slug;
+    var base    = 'projects/' + slug;
+    var mainImg = data.main || 'main.jpg';
+
+    var tile = document.createElement('div');
+    tile.className   = 'project-item';
+    tile.dataset.id  = slug;
+    tile.dataset.cat = data.category;
+    tile.setAttribute('role', 'button');
+    tile.setAttribute('tabindex', '0');
+    tile.innerHTML =
+      '<img src="' + base + '/' + mainImg + '" alt="' + data.title + '" loading="lazy">' +
+      '<div class="tile-overlay"></div>' +
+      '<div class="hover-label"><span>' + data.title + '</span></div>';
+
+    tile.addEventListener('click', function () { handleTileClick(slug); });
+    tile.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleTileClick(slug); }
+    });
+
+    return tile;
+  }
+
+  function buildPanel(data) {
+    var slug    = data.slug;
+    var base    = 'projects/' + slug;
+    var mainImg = data.main || 'main.jpg';
+
+    var galleryHTML = '';
+    if (data.gallery && data.gallery.length) {
+      galleryHTML = data.gallery.map(function (item) {
+        var filename = typeof item === 'string' ? item : item.file;
+        var caption  = typeof item === 'string' ? '' : (item.caption || '');
+        var src = base + '/' + filename;
+        return '<img src="' + src + '" alt="' + data.title + ' detail" data-full="' + src + '" data-caption="' + caption.replace(/"/g, '&quot;') + '" loading="lazy">';
+      }).join('');
+    }
+
+    var videoThumbHTML = '';
+    if (data.video) {
+      var isYouTube = data.video.indexOf('youtube.com') !== -1;
+      /* YouTube supports query params for muted/no-controls preview mode.
+         Other platforms (Viddsee, Vimeo, etc.) don't share that syntax,
+         so for non-YouTube embeds, load the URL exactly as given. */
+      var previewSrc = isYouTube
+        ? data.video + '?controls=0&mute=1&modestbranding=1&rel=0'
+        : data.video;
+
+      videoThumbHTML =
+        '<div class="panel-video-thumb" data-video="' + data.video + '">' +
+          '<iframe src="' + previewSrc + '" ' +
+            'title="Video preview" frameborder="0" tabindex="-1" allowfullscreen></iframe>' +
+          '<div class="thumb-click-shield"></div>' +
+          '<div class="play-btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>' +
+        '</div>';
+    }
+
+    var collabHTML = data.collaborators ? '<p class="panel-collaborators">' + data.collaborators + '</p>' : '';
+    var exhibitedHTML = data.exhibited ? '<p class="panel-exhibited">' + data.exhibited + '</p>' : '';
+    var linkHTML = data.link
+      ? '<a class="panel-link" href="' + data.link + '" target="_blank" rel="noopener">' +
+          '<svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/>' +
+          '<polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>visit project</a>'
+      : '';
+
+    var rightCol = (videoThumbHTML || galleryHTML)
+      ? '<div class="panel-gallery-col">' +
+          videoThumbHTML +
+          (galleryHTML ? '<p class="panel-gallery-label">process</p><div class="panel-gallery">' + galleryHTML + '</div>' : '') +
+        '</div>'
+      : '';
+
+    var panel = document.createElement('div');
+    panel.className = 'expand-panel';
+    panel.id        = 'panel-' + slug;
+    panel.innerHTML =
+      '<div class="panel-left-col">' +
+        '<button class="panel-close" data-id="' + slug + '">' +
+          '<svg viewBox="0 0 24 24"><path d="M19 12H5M5 12l7-7M5 12l7 7"/></svg>close' +
+        '</button>' +
+        '<img class="panel-main-img" src="' + base + '/' + mainImg + '" alt="' + data.title + '" data-full="' + base + '/' + mainImg + '">' +
+      '</div>' +
+      '<div class="panel-description-col">' +
+        collabHTML +
+        '<h2 class="panel-title">' + data.title + '</h2>' +
+        '<p class="panel-category">' + (data.medium || data.category) + '</p>' +
+        exhibitedHTML +
+        '<p class="panel-description">' + (data.description || '').trim() + '</p>' +
+        linkHTML +
+      '</div>' +
+      rightCol;
+
+    return panel;
+  }
+
+  /* ════════════════════════════════════════
+     PANEL OPEN / CLOSE — exactly one open at a time
+  ════════════════════════════════════════ */
+  function handleTileClick(slug) {
+    if (activeId === slug) { closePanel(slug); return; }
+    if (activeId) closePanel(activeId, true);
+
+    var tile  = tileEls[slug];
+    var panel = panels[slug];
+    if (!tile || !panel) return;
+
+    tile.style.display = 'none';
+
+    var slot = document.getElementById('panel-slot');
+    slot.appendChild(panel);
+    panel.classList.add('open');
+    activeId = slug;
+
+    setTimeout(function () {
+      slot.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 80);
+  }
+
+  function closePanel(slug, instant) {
+    var tile  = tileEls[slug];
+    var panel = panels[slug];
+    activeId = null;
+    if (!panel) return;
+
+    if (instant) {
+      panel.classList.remove('open');
+      if (panel.parentNode) panel.parentNode.removeChild(panel);
+      if (tile) tile.style.display = '';
+      return;
+    }
+
+    panel.classList.remove('open');
+    setTimeout(function () {
+      if (panel.parentNode) panel.parentNode.removeChild(panel);
+      if (tile) tile.style.display = '';
+    }, 450);
+  }
+
+  /* ════════════════════════════════════════
+     NAV FILTERING — bound exactly once
+  ════════════════════════════════════════ */
+  function bindNav() {
+    /* Only category buttons (those with data-cat) drive grid filtering.
+       #about-btn is handled separately by bindAbout(). */
+    document.querySelectorAll('nav button[data-cat]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        document.querySelectorAll('nav button[data-cat]').forEach(function (b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+        var cat = btn.dataset.cat;
+
+        /* Forcefully clear any open panel from the slot before rebuilding */
+        var slot = document.getElementById('panel-slot');
+        slot.innerHTML = '';
+        activeId = null;
+        masonry.style.display = '';  /* ensure grid is visible if about was open */
+
+        var filtered = cat === 'all'
+          ? window.PROJECTS
+          : window.PROJECTS.filter(function (p) { return p.category === cat; });
+        currentFilteredProjects = filtered;
+        buildGrid(filtered);
+      });
+    });
+  }
+
+  /* ════════════════════════════════════════
+     DELEGATED CLICKS — bound exactly once
+  ════════════════════════════════════════ */
+  function bindDelegatedClicks() {
+    document.addEventListener('click', function (e) {
+      var closeBtn = e.target.closest('.panel-close');
+      if (closeBtn) { e.stopPropagation(); closePanel(closeBtn.dataset.id); return; }
+
+      var thumb = e.target.closest('.panel-gallery img, .panel-main-img');
+      if (thumb) { e.stopPropagation(); openImgLightbox(thumb.dataset.full || thumb.src, thumb.alt, thumb.dataset.caption); return; }
+
+      var vthumb = e.target.closest('.panel-video-thumb');
+      if (vthumb) { e.stopPropagation(); openVideoLightbox(vthumb.dataset.video); return; }
+    });
+  }
+
+  /* ════════════════════════════════════════
+     LIGHTBOX
+  ════════════════════════════════════════ */
+  function openImgLightbox(src, alt, caption) {
+    lightboxImg.src = src;
+    lightboxImg.alt = alt || '';
+    if (caption) {
+      lightboxCaption.textContent = caption;
+      lightboxCaption.classList.add('has-caption');
+    } else {
+      lightboxCaption.textContent = '';
+      lightboxCaption.classList.remove('has-caption');
+    }
+    lightbox.className = 'open img-mode';
+    document.body.style.overflow = 'hidden';
+    requestAnimationFrame(function () { requestAnimationFrame(function () { lightbox.classList.add('visible'); }); });
+  }
+
+  function openVideoLightbox(url) {
+    var isYouTube = url.indexOf('youtube.com') !== -1;
+    lightboxVideo.src = isYouTube ? (url + '?autoplay=1') : url;
+    lightbox.className = 'open video-mode';
+    document.body.style.overflow = 'hidden';
+    requestAnimationFrame(function () { requestAnimationFrame(function () { lightbox.classList.add('visible'); }); });
+  }
+
+  function closeLightbox() {
+    lightbox.classList.remove('visible');
+    setTimeout(function () {
+      lightbox.className = '';
+      lightboxImg.src = '';
+      lightboxVideo.src = '';
+      document.body.style.overflow = '';
+    }, 220);
+  }
+
+  function bindLightbox() {
+    lightbox.addEventListener('click', function (e) { if (e.target === lightbox) closeLightbox(); });
+    lightboxClose.addEventListener('click', function (e) { e.stopPropagation(); closeLightbox(); });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') {
+        if (lightbox.classList.contains('open')) closeLightbox();
+        else if (aboutModalEl && aboutModalEl.classList.contains('open')) closeAbout();
+        else if (activeId) closePanel(activeId);
+      }
+    });
+  }
+
+  /* ════════════════════════════════════════
+     ABOUT MODAL
+  ════════════════════════════════════════ */
+  function openAbout() {
+    if (activeId) closePanel(activeId, true);  /* close any open project panel first */
+    if (!aboutModalEl) return;
+
+    var slot = document.getElementById('panel-slot');
+    slot.appendChild(aboutModalEl);
+    aboutModalEl.classList.add('open');
+
+    /* Hide the project grid entirely while about is showing */
+    masonry.style.display = 'none';
+
+    setTimeout(function () {
+      slot.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 80);
+  }
+
+  function closeAbout() {
+    if (!aboutModalEl) return;
+    aboutModalEl.classList.remove('open');
+    setTimeout(function () {
+      if (aboutModalEl.parentNode) aboutModalEl.parentNode.removeChild(aboutModalEl);
+      masonry.style.display = '';  /* show the grid again */
+    }, 450);
+  }
+
+  function buildAboutModal() {
+    var data = window.ABOUT;
+    var modal = document.getElementById('about-modal');
+    if (!data || !modal) return;
+    aboutModalEl = modal;
+
+    var bioHTML = (data.bio || []).map(function (p) {
+      return '<p>' + p + '</p>';
+    }).join('');
+
+    var linksHTML = (data.links || []).map(function (l) {
+      if (!l.url) {
+        /* No URL — render as plain text (e.g. spelled-out email to avoid bots) */
+        return '<span class="about-link-text">' + l.label + '</span>';
+      }
+      var external = /^https?:\/\//.test(l.url);
+      return '<a href="' + l.url + '"' + (external ? ' target="_blank" rel="noopener"' : '') + '>' + l.label + '</a>';
+    }).join('');
+
+    modal.innerHTML =
+      '<div class="about-image-col">' +
+        '<img src="' + (data.photo || '') + '" alt="' + (data.name || '') + '">' +
+      '</div>' +
+      '<div class="about-text-col">' +
+        '<button id="about-close" aria-label="Close">' +
+          '<svg viewBox="0 0 24 24"><path d="M19 12H5M5 12l7-7M5 12l7 7"/></svg>close' +
+        '</button>' +
+        '<h2>' + (data.name || '') + '</h2>' +
+        '<p class="about-role">' + (data.role || '') + '</p>' +
+        bioHTML +
+        (linksHTML ? '<div class="about-links">' + linksHTML + '</div>' : '') +
+      '</div>';
+  }
+
+  function bindAbout() {
+    buildAboutModal();
+    var aboutBtn = document.getElementById('about-btn');
+    if (aboutBtn) aboutBtn.addEventListener('click', openAbout);
+    /* Delegated close button click, since it's rebuilt dynamically */
+    document.addEventListener('click', function (e) {
+      var closeBtn = e.target.closest('#about-close');
+      if (closeBtn) { e.stopPropagation(); closeAbout(); }
+    });
+  }
+
+  init();
+}());
+</script>
 </body>
 </html>
