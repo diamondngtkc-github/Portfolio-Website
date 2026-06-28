@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Diamond Nguyen</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=Inter:wght@300;400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Sacramento&family=Nunito:wght@400;500;600;700&display=swap');
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -16,8 +16,8 @@
   --border: rgba(0,0,0,0.09);
   --panel-bg: #f8f8f6;
   --gap: 8px;
-  --font-display: 'IM Fell English', Georgia, serif;
-  --font-body: 'Inter', system-ui, sans-serif;
+  --font-display: 'Sacramento', cursive;
+  --font-body: 'Nunito', system-ui, sans-serif;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -42,8 +42,8 @@ header { padding: 2.5rem 2rem 0; text-align: center; }
 
 .site-title {
   font-family: var(--font-display);
-  font-style: italic;
-  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  font-style: normal;
+  font-size: clamp(2.6rem, 6vw, 4.2rem);
   font-weight: 400;
   letter-spacing: 0.01em;
 }
@@ -59,9 +59,9 @@ nav button {
   background: none;
   border: none;
   font-family: var(--font-body);
-  font-size: 0.78rem;
-  font-weight: 400;
-  letter-spacing: 0.08em;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
   text-transform: lowercase;
   color: var(--text-muted);
   cursor: pointer;
@@ -71,7 +71,7 @@ nav button {
 }
 
 nav button:hover { color: var(--text); }
-nav button.active { color: var(--text); font-weight: 500; }
+nav button.active { color: var(--text); font-weight: 700; }
 nav button.active::after {
   content: '';
   position: absolute;
@@ -249,9 +249,9 @@ nav button.active::after {
 
 .panel-title {
   font-family: var(--font-display);
-  font-size: 1.65rem;
+  font-size: 2.3rem;
   font-weight: 400;
-  line-height: 1.15;
+  line-height: 1.2;
   margin-bottom: 0.35rem;
   color: var(--text);
 }
@@ -538,9 +538,9 @@ nav button.active::after {
 
 #about-modal h2 {
   font-family: var(--font-display);
-  font-size: 1.65rem;
+  font-size: 2.3rem;
   font-weight: 400;
-  line-height: 1.15;
+  line-height: 1.2;
   margin-top: 2rem;
   margin-bottom: 0.35rem;
   color: var(--text);
