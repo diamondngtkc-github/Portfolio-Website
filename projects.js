@@ -384,8 +384,8 @@ Week 12: Final Presentation`,
 ] },
 
  {
-    slug: "vj-live-performance",
-    title: "VJ Live Performance",
+    slug: "vj-performance",
+    title: "VJ Performance",
     category: "teach",
     collaborators: "RMIT University, Vietnam",
     description: `COMM2752 | Digital Media Specialisation 
