@@ -177,10 +177,12 @@ The project is awarded $7,500 ArtsActivate grant from City of Dallas to develop 
     exhibited: `ATC Gallery, UTD, Dallas, TX | February 24 – March 2, 2025`,
     category: "interact",
     collaborators: "Diamond Nguyen",
-    description: `The Climb is an AR interactive 3D zoetropic experience about the journey of hiking up a mountain in the northwestern region of Vietnam. The journey showcases the beauty of the landscape and the physically demanding journey of the human experience, yet the local people do it every day as a means of earning their living. You follow the guide of a H’mong teenager porter named Bau, who carries all your necessities in her woven basket. Along the way, you will see the life of the locals and the beauty of the landscape, with terraced paddy fields and blooming local bauhinia flowers (hoa ban). Many view the lives of ethnic minorities as poor and difficult. However, I see poverty as a way of living simply and humbly, embracing ourselves, others, and life as it is. It’s about letting go of possessiveness and power, keeping an open heart, and finding connection through mutual support. In Vietnam's northwest, though life may lack material comforts and many teenagers leave school to support their families, there is a kindness and joy in their simplicity that reflects a deeper richness. Through this piece, I want to portray on their hardships with a sense of hope and beauty.`,
+    description: `The Climb is an AR interactive 3D zoetropic experience about the journey of hiking up a mountain in the northwestern region of Vietnam. The journey showcases the beauty of the landscape and the physically demanding journey of the human experience, yet the local people do it every day as a means of earning their living. You follow the guide of a H’mong teenager porter named Bau, who carries all your necessities in her woven basket. Along the way, you will see the life of the locals and the beauty of the landscape, with terraced paddy fields and blooming local bauhinia flowers (hoa ban). 
+    
+    Many view the lives of ethnic minorities as poor and difficult. However, I see poverty as a way of living simply and humbly, embracing ourselves, others, and life as it is. It’s about letting go of possessiveness and power, keeping an open heart, and finding connection through mutual support. In Vietnam's northwest, though life may lack material comforts and many teenagers leave school to support their families, there is a kindness and joy in their simplicity that reflects a deeper richness. Through this piece, I want to portray on their hardships with a sense of hope and beauty.`,
     video: "https://youtube.com/embed/tiy3tq9QtwI?si=NfoXSRJt96g6MaLB",
     main: "main.png",
-    gallery: ["01.png", "02.jpeg", "03.jpeg", "04.png", "05.png", "06.png", "07.png", "08.png", "09.png"],
+    gallery: ["01.png", "02.jpeg", "03.jpeg", "04.png", "05.png", "06.png", "08.png", "09.png", "10.png"],
   },
 
   {
@@ -236,13 +238,13 @@ The project is awarded $7,500 ArtsActivate grant from City of Dallas to develop 
 
   {
     slug: "ra-khoi",
-    title: "Ra Khơi (Out to Sea) (2024)",
+    title: "Ra Khơi (Out to the sea) (2024)",
     category: "paint",
     medium: "oil on canvas",
     collaborators: "Diamond Nguyen",
     description: `7" x 4.7"
 
-    Ra Khơi (Out to Sea) is an oil painting that captures the moment of a lone boat venturing into the vastness of the sea. The painting evokes a sense of solitude, courage, and the human spirit's resilience in the face of the unknown. The interplay of light and shadow on the water's surface reflects the ever-changing nature of life and the journey we all undertake.`,
+    Ra Khơi (Out to the sea) is an oil painting that captures the moment of a lone boat venturing into the vastness of the sea. The painting evokes a sense of solitude, courage, and the human spirit's resilience in the face of the unknown. The interplay of light and shadow on the water's surface reflects the ever-changing nature of life and the journey we all undertake.`,
     video: "",
     main: "main.jpg",
     gallery: ["01.jpg"],
@@ -442,7 +444,7 @@ Role: Animator`,
     exhibited: "YouTube | December 22, 2020",
     category: "animate",
     collaborators: "VSKH",
-    description: ` I joined the team Việt Sử Kiêu Hùng (VSKH) as an animator to make the movie Bình Ngô Đại Chiến (The Pacification Of The Wu). VSKH is a non-profit project with the mission to enhance the young generation's interest in learning about Vietnamese history through animated series portraying prominent figures, battles, and events. The most ambitious part of the project, the full-length 60-minute animation Bình Ngô Đại Chiến raised 1-billion-Vietnam-Dong (~50,000 USD) for the production process.
+    description: ` I joined the team Việt Sử Kiêu Hùng (VSKH) as an animator to make the movie Bình Ngô Đại Chiến (The Pacification Of The Wu) in 2020. VSKH is a non-profit project with the mission to enhance the young generation's interest in learning about Vietnamese history through animated series portraying prominent figures, battles, and events. The most ambitious part of the project, the full-length 60-minute animation Bình Ngô Đại Chiến raised 1-billion-Vietnam-Dong (~50,000 USD) for the production process.
 
 After premiering on YouTube on December 22, 2020, the animation instantly gained overwhelming attention with more than 7.4M views now in 2026 and stayed among the top trending videos in Vietnam.
 
