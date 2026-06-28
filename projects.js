@@ -182,7 +182,7 @@ The project is awarded $7,500 ArtsActivate grant from City of Dallas to develop 
     Many view the lives of ethnic minorities as poor and difficult. However, I see poverty as a way of living simply and humbly, embracing ourselves, others, and life as it is. It’s about letting go of possessiveness and power, keeping an open heart, and finding connection through mutual support. In Vietnam's northwest, though life may lack material comforts and many teenagers leave school to support their families, there is a kindness and joy in their simplicity that reflects a deeper richness. Through this piece, I want to portray on their hardships with a sense of hope and beauty.`,
     video: "https://youtube.com/embed/tiy3tq9QtwI?si=NfoXSRJt96g6MaLB",
     main: "main.png",
-    gallery: ["01.png", "02.jpeg", "03.jpeg", "04.png", "05.png", "06.png", "08.png", "09.png", "10.png"],
+    gallery: ["01.png", "02.jpeg", "03.jpeg", "04.png", "05.png", "06.png", "07.png", "08.png", "09.png"],
   },
 
   {
