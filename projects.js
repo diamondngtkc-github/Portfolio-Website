@@ -122,7 +122,7 @@ The project is awarded $7,500 ArtsActivate grant from City of Dallas to develop 
     exhibited: "ARC Gallery, Dallas, TX | December 11, 2025",
     category: "performance",
     collaborators: "Diamond Nguyen, Dean Terry, and Daniel Kim",
-    description: `Vocal and music performance with Dean Terry (bass) and Daniel Kim (drums). The performance is part of the Movements - Performance Night.`,
+    description: `Vocal and music performance with Dean Terry (bass) and Daniel Kim (drums). The performance is part of the Movements - Performance Night. Smolder explores the emotional and physical intensity of human experiences during moments of passion, conflict, and transformation. Through a combination of vocal expression and instrumental improvisation, the performance seeks to evoke a visceral response from the audience, inviting them to reflect on their own inner landscapes and the complexities of human emotion.`,
     video: "",
     main: "main.png",
     gallery: ["01.png"],
