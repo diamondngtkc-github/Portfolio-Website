@@ -385,7 +385,7 @@ Week 12: Final Presentation`,
 
  {
     slug: "vj-performance",
-    title: "VJ Performance",
+    title: "VJ Performance (2022)",
     category: "teach",
     collaborators: "RMIT University, Vietnam",
     description: `COMM2752 | Digital Media Specialisation 
