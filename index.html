@@ -1,21 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Diamond Nguyen</title>
+
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-TWE9Q2B4WV"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
-
   gtag('config', 'G-TWE9Q2B4WV');
 </script>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Diamond Nguyen</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sacramento&family=Crimson+Pro:wght@500;600&family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Sacramento&family=Crimson+Pro:wght@500;600&family=Nunito:wght@400;500;600;700&display=swap');
-
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
@@ -764,7 +765,7 @@ footer {
     tile.setAttribute('role', 'button');
     tile.setAttribute('tabindex', '0');
     tile.innerHTML =
-      '<img src="' + base + '/' + mainImg + '" alt="' + data.title + '" loading="lazy">' +
+      '<img src="' + base + '/' + mainImg + '" alt="' + data.title + '" loading="lazy" decoding="async">' +
       '<div class="tile-overlay"></div>' +
       '<div class="hover-label"><span>' + data.title + '</span></div>';
 
@@ -787,7 +788,7 @@ footer {
         var filename = typeof item === 'string' ? item : item.file;
         var caption  = typeof item === 'string' ? '' : (item.caption || '');
         var src = base + '/' + filename;
-        return '<img src="' + src + '" alt="' + data.title + ' detail" data-full="' + src + '" data-caption="' + caption.replace(/"/g, '&quot;') + '" loading="lazy">';
+        return '<img src="' + src + '" alt="' + data.title + ' detail" data-full="' + src + '" data-caption="' + caption.replace(/"/g, '&quot;') + '" loading="lazy" decoding="async">';
       }).join('');
     }
 
